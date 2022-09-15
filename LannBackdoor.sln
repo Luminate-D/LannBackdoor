@@ -2,6 +2,14 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LannBackdoor", "LannBackdoor\LannBackdoor.csproj", "{985E5DA7-48CD-4793-B9D3-F4D8124194CB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LannLogger", "LannLogger\LannLogger.csproj", "{49FB8533-43B9-41CD-8448-87E8FA23D4F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Networking", "Networking\Networking.csproj", "{FDD2D9A0-10A5-4690-950C-81A840F2AE4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LannUtils", "LannUtils\LannUtils.csproj", "{551EDC74-5F2D-488D-910A-278208633C68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LannConstants", "LannConstants\LannConstants.csproj", "{7CAEE536-F9FD-4DE1-B510-69A0C869E812}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +20,21 @@ Global
 		{985E5DA7-48CD-4793-B9D3-F4D8124194CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{985E5DA7-48CD-4793-B9D3-F4D8124194CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{985E5DA7-48CD-4793-B9D3-F4D8124194CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49FB8533-43B9-41CD-8448-87E8FA23D4F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49FB8533-43B9-41CD-8448-87E8FA23D4F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49FB8533-43B9-41CD-8448-87E8FA23D4F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49FB8533-43B9-41CD-8448-87E8FA23D4F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDD2D9A0-10A5-4690-950C-81A840F2AE4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDD2D9A0-10A5-4690-950C-81A840F2AE4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDD2D9A0-10A5-4690-950C-81A840F2AE4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDD2D9A0-10A5-4690-950C-81A840F2AE4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{551EDC74-5F2D-488D-910A-278208633C68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{551EDC74-5F2D-488D-910A-278208633C68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{551EDC74-5F2D-488D-910A-278208633C68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{551EDC74-5F2D-488D-910A-278208633C68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CAEE536-F9FD-4DE1-B510-69A0C869E812}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CAEE536-F9FD-4DE1-B510-69A0C869E812}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CAEE536-F9FD-4DE1-B510-69A0C869E812}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CAEE536-F9FD-4DE1-B510-69A0C869E812}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
