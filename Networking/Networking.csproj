@@ -1,17 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <OutputType>Exe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\LannConstants\LannConstants.csproj" />
       <ProjectReference Include="..\LannLogger\LannLogger.csproj" />
-      <ProjectReference Include="..\Modules\Modules.csproj" />
-      <ProjectReference Include="..\Networking\Networking.csproj" />
+      <ProjectReference Include="..\LannUtils\LannUtils.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.2-beta2" />
     </ItemGroup>
 
 </Project>

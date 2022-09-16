@@ -9,9 +9,14 @@ using Newtonsoft.Json;
 namespace Networking;
 
 public class TCPClient {
+    public class OnCommandEventArgs : EventArgs {
+        public Packet Packet { get; set; }
+    }
+    
     public int Id;
     
     public event EventHandler OnConnect = delegate {  };
+    public event EventHandler<OnCommandEventArgs> OnCommand = delegate {  };
 
     private readonly TcpClient _client;
     private readonly PacketProcessor _packetProcessor;
@@ -42,10 +47,9 @@ public class TCPClient {
             Packet? packet = _packetProcessor.TryGetPacket();
             if (packet == null) continue;
 
-            _logger.Debug("Packet received: {Module}/{Handler}: {Data}",
-                packet.ModuleId,
-                packet.HandlerId,
-                packet.GetData<object>());
+            OnCommand(null, new OnCommandEventArgs {
+                Packet = packet
+            });
         }
     }
 
