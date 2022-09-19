@@ -24,7 +24,7 @@ public class PacketProcessor {
     public Packet? TryGetPacket() {
         if (_state == PacketProcessorState.Awaiting) {
             if (_buffer.Count < 4) return null;
-            
+
             _size = BitConverter.ToInt32(_buffer.Take(4).ToArray());
             _buffer = _buffer.Skip(4).ToList();
             
@@ -43,6 +43,7 @@ public class PacketProcessor {
             return new Packet(readData);
         }
 
+        Console.WriteLine("State After: " + _state);
         return null;
     }
 }

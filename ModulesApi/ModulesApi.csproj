@@ -4,6 +4,12 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>Modules</RootNamespace>
     </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\LannUtils\LannUtils.csproj" />
+      <ProjectReference Include="..\Networking\Networking.csproj" />
+    </ItemGroup>
 
 </Project>
