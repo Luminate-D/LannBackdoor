@@ -1,4 +1,6 @@
-﻿namespace Networking.Packets;
+﻿using System.Text;
+
+namespace Networking.Packets;
 
 enum PacketProcessorState {
     Awaiting, Processing
@@ -34,16 +36,15 @@ public class PacketProcessor {
         if (_state == PacketProcessorState.Processing) {
             if (_buffer.Count < _size) return null;
 
-            List<byte> readData = _buffer.Take(_size).ToList();
+            byte[] readData = _buffer.Take(_size).ToArray();
             _buffer = _buffer.Skip(_size).ToList();
 
             _state = PacketProcessorState.Awaiting;
             _size = -1;
 
-            return new Packet(readData);
+            return new Packet(Encoding.UTF8.GetString(readData));
         }
 
-        Console.WriteLine("State After: " + _state);
         return null;
     }
 }

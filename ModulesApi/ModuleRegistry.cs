@@ -27,15 +27,16 @@ public class ModuleRegistry {
         Modules.Remove(id);
     }
 
-    public static void Load(byte[] raw) {
-        LoadByAssembly(Assembly.Load(raw));
+    public static ModuleInfo[] Load(byte[] raw) {
+        return LoadByAssembly(Assembly.Load(raw));
     }
     
-    public static void LoadByAssembly(Assembly asm) {
+    public static ModuleInfo[] LoadByAssembly(Assembly asm) {
         Type[] modulesTypes = asm.GetTypes()
             .Where(x => x.GetCustomAttribute<Module>() != null)
             .ToArray();
 
+        List<ModuleInfo> loadedModules = new();
         foreach (Type type in modulesTypes) {
             string moduleName = type.GetCustomAttribute<Module>()!.Name;
             int id = ModuleIdPool.NextId();
@@ -55,6 +56,7 @@ public class ModuleRegistry {
 
             ModuleInfo module = new(id, moduleName, handlersArray);
             Modules.Add(id, module);
+            loadedModules.Add(module);
             
             Logger.Information("Loaded module {Name} (ID: {Id}) | Handlers:",
                 module.Name, module.Id);
@@ -63,5 +65,7 @@ public class ModuleRegistry {
                     handlerInfo.Name, handlerInfo.Id);
             }
         }
+
+        return loadedModules.ToArray();
     }
 }

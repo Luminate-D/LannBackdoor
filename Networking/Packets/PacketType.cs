@@ -1,5 +1,9 @@
 ﻿namespace Networking.Packets; 
 
 public enum PacketType {
-    System
+    Pong,
+    Ready, Verified,
+    
+    ModuleLoadResult,
+    AssemblyLoadResult
 }

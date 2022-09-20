@@ -7,23 +7,14 @@ namespace Networking.Packets;
 public class Packet {
     public readonly int ModuleId;
     public readonly int HandlerId;
-    public readonly bool IsDataRaw;
     private readonly object _data;
     
-    public Packet(List<byte> data) {
-        ModuleId = BitConverter.ToInt32(data.Take(4).ToArray());
-        HandlerId = BitConverter.ToInt32(data.Skip(4).Take(4).ToArray());
-        IsDataRaw = data.Skip(8).First() == 1;
-        
-        byte[] dataBytes = data.Skip(9).ToArray();
+    public Packet(string data) {
+        IPacket parsed = JsonConvert.DeserializeObject<IPacket>(data)!;
+        ModuleId = parsed.Module;
+        HandlerId = parsed.Handler;
 
-        if (IsDataRaw) {
-            _data = dataBytes;
-            return;
-        }
-
-        string dataString = Encoding.UTF8.GetString(dataBytes);
-        _data = JsonConvert.DeserializeObject(dataString) ?? throw new ArgumentException("Cannot parse JSON");
+        _data = parsed.Data;
     }
 
     public T GetData<T>(Type type) {
@@ -34,4 +25,11 @@ public class Packet {
     public T GetData<T>() {
         return (T) _data;
     }
+}
+
+
+public class IPacket {
+    [JsonProperty("module")] public int Module { get; set; }
+    [JsonProperty("handler")] public int Handler { get; set; }
+    [JsonProperty("data")] public object Data { get; set; }
 }
