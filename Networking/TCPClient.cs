@@ -12,32 +12,54 @@ public class TCPClient {
     public class OnCommandEventArgs : EventArgs {
         public Packet Packet { get; set; }
     }
-    
+
+    public bool IsVerified;
     public int Id;
     
+    public event EventHandler OnClose = delegate {  };
     public event EventHandler OnConnect = delegate {  };
     public event EventHandler<OnCommandEventArgs> OnCommand = delegate {  };
 
-    private readonly TcpClient _client;
+    private TcpClient _client;
     private readonly PacketProcessor _packetProcessor;
 
     private readonly Serilog.Core.Logger _logger = LoggerFactory.CreateLogger("TcpServer");
+
+    private readonly string URL;
+    private readonly int Port;
+    private bool IsHandlingPackets;
     
-    public TCPClient() {
+    public TCPClient(string url, int port) {
+        URL = url;
+        Port = port;
+        IsVerified = false;
         Id = -1;
+
+        IsHandlingPackets = false;
 
         _client = new TcpClient();
         _packetProcessor = new PacketProcessor();
     }
 
     public async Task Connect() {
-        await _client.ConnectAsync(IPAddress.Parse("127.0.0.1"), 2022);
+        await _client.ConnectAsync(IPAddress.Parse(URL), Port);
         OnConnect(this, EventArgs.Empty);
+    }
+    
+    public void Dispose() {
+        _client.Close();
+        _client.Dispose();
+        
+        _client = new TcpClient();
+        _packetProcessor.Clear();
+        IsHandlingPackets = false;
     }
 
     public async Task StartHandlingPackets() {
         _logger.Debug("Started handling packets");
+        IsHandlingPackets = true;
         while (true) {
+            if (!IsHandlingPackets) break;
             NetworkStream stream = _client.GetStream();
             
             byte[] buffer = new byte[2048];
@@ -61,7 +83,11 @@ public class TCPClient {
         byte[] typeBytes = BitConverter.GetBytes((int) type);
         byte[] size = BitConverter.GetBytes(dataBytes.Length + typeBytes.Length);
         byte[] resultBytes = size.Concat(typeBytes).Concat(dataBytes).ToArray();
-        
-        await stream.WriteAsync(resultBytes);
+
+        try {
+            await stream.WriteAsync(resultBytes);
+        } catch {
+            OnClose(this, EventArgs.Empty);
+        }
     }
 }

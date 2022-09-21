@@ -17,6 +17,12 @@ public class PacketProcessor {
         _size = -1;
     }
 
+    public void Clear() {
+        _buffer = new List<byte>();
+        _size = -1;
+        _state = PacketProcessorState.Awaiting;
+    }
+
     public void Write(byte[] data, int count) {
         for (int i = 0; i < count; i++) {
             _buffer.Add(data[i]);

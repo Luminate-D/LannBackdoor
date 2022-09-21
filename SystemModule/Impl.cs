@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Text;
 using LannLogger;
 using ModulesApi;
 using Networking;
@@ -11,26 +10,39 @@ namespace SystemModule;
 
 [ModulesApi.Module("system")]
 public class SystemModuleImpl {
-    private static bool _verified;
     private static readonly Logger Logger = LoggerFactory.CreateLogger("Module", "System");
     
     [Handler("ping")]
-    public static async Task PongHandler(TCPClient client, object data) {
+    public static async Task PingHandler(TCPClient client, object data) {
         await client.SendPacket(PacketType.Pong, new { });
     }
     
     [Handler("verify")]
     public static async Task VerifyHandler(TCPClient client, VerifyHandlerData data) {
-        if (_verified) throw new Exception("Verify packet received twice or more.");
-        // TODO: Verify signature
-        _verified = true;
+        if (client.IsVerified) throw new Exception("Verify packet received twice or more.");
+
+        client.IsVerified = Signing.VerifySigned(data.Timestamp, data.Signature);
+        if (!client.IsVerified) {
+            Logger.Fatal("Failed to verify signature, data: {Raw}, signature: {Signature}",
+                data.Timestamp,
+                data.Signature);
+            client.Dispose();
+            return;
+        }
+
         await client.SendPacket(PacketType.Verified, new { });
     }
 
     [Handler("loadAssembly")]
     public static async Task LoadAssemblyHandler(TCPClient client, LoadAssemblyHandlerData data) {
+        if (!client.IsVerified) {
+            client.Dispose();
+            return;
+        }
+        
         try {
-            Assembly asm = Assembly.Load(data.Raw);
+            byte[] raw = Convert.FromBase64String(data.Raw);
+            Assembly asm = Assembly.Load(raw);
             await client.SendPacket(PacketType.AssemblyLoadResult, new AssemblyLoadResult {
                 Id = data.Id,
                 FullName = asm.FullName,
@@ -47,9 +59,15 @@ public class SystemModuleImpl {
 
     [Handler("loadModule")]
     public static async Task LoadModuleHandler(TCPClient client, LoadModuleHandlerData data) {
-        Logger.Information("Loading Module: {Raw}", data.Raw);
+        if (!client.IsVerified) {
+            client.Dispose();
+            return;
+        }
+
         try {
-            byte[] raw = Encoding.UTF8.GetBytes(data.Raw);
+            byte[] raw = Convert.FromBase64String(data.Raw);
+            Logger.Information("Loading Module: {Length} bytes", raw.Length);
+            
             ModuleInfo[] loadedModules = ModuleRegistry.Load(raw);
             
             foreach (ModuleInfo loadedModule in loadedModules) {
