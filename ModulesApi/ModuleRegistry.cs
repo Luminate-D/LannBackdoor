@@ -5,7 +5,7 @@ using Serilog.Core;
 
 namespace ModulesApi;
 
-public class ModuleRegistry {
+public static class ModuleRegistry {
     private static readonly Logger Logger = LoggerFactory.CreateLogger("ModuleRegistry");
     private static readonly IdPool ModuleIdPool = new();
     private static readonly Dictionary<int, ModuleInfo> Modules = new();
@@ -16,6 +16,10 @@ public class ModuleRegistry {
             new KeyValuePair<int, ModuleInfo>())!;
 
         return kvPair.Value;
+    }
+
+    public static Dictionary<int, ModuleInfo> GetModules() {
+        return Modules;
     }
 
     public static ModuleInfo? GetByName(string name) {

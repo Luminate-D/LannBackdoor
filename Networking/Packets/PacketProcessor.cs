@@ -39,18 +39,15 @@ public class PacketProcessor {
             _state = PacketProcessorState.Processing;
         }
 
-        if (_state == PacketProcessorState.Processing) {
-            if (_buffer.Count < _size) return null;
+        if (_state != PacketProcessorState.Processing) return null;
+        if (_buffer.Count < _size) return null;
 
-            byte[] readData = _buffer.Take(_size).ToArray();
-            _buffer = _buffer.Skip(_size).ToList();
+        byte[] readData = _buffer.Take(_size).ToArray();
+        _buffer = _buffer.Skip(_size).ToList();
 
-            _state = PacketProcessorState.Awaiting;
-            _size = -1;
+        _state = PacketProcessorState.Awaiting;
+        _size  = -1;
 
-            return new Packet(Encoding.UTF8.GetString(readData));
-        }
-
-        return null;
+        return new Packet(Encoding.UTF8.GetString(readData));
     }
 }

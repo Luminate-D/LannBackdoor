@@ -10,7 +10,7 @@ namespace Networking;
 
 public class TCPClient {
     public class OnCommandEventArgs : EventArgs {
-        public Packet Packet { get; set; }
+        public Packet Packet { get; init; } = null!;
     }
 
     public bool IsVerified;
@@ -25,24 +25,24 @@ public class TCPClient {
 
     private readonly Serilog.Core.Logger _logger = LoggerFactory.CreateLogger("TcpServer");
 
-    private readonly string URL;
-    private readonly int Port;
-    private bool IsHandlingPackets;
+    private readonly string _url;
+    private readonly int _port;
+    private bool _isHandlingPackets;
     
     public TCPClient(string url, int port) {
-        URL = url;
-        Port = port;
+        _url = url;
+        _port = port;
         IsVerified = false;
         Id = -1;
 
-        IsHandlingPackets = false;
+        _isHandlingPackets = false;
 
         _client = new TcpClient();
         _packetProcessor = new PacketProcessor();
     }
 
     public async Task Connect() {
-        await _client.ConnectAsync(IPAddress.Parse(URL), Port);
+        await _client.ConnectAsync(IPAddress.Parse(_url), _port);
         OnConnect(this, EventArgs.Empty);
     }
     
@@ -52,14 +52,14 @@ public class TCPClient {
         
         _client = new TcpClient();
         _packetProcessor.Clear();
-        IsHandlingPackets = false;
+        _isHandlingPackets = false;
     }
 
     public async Task StartHandlingPackets() {
         _logger.Debug("Started handling packets");
-        IsHandlingPackets = true;
+        _isHandlingPackets = true;
         while (true) {
-            if (!IsHandlingPackets) break;
+            if (!_isHandlingPackets) break;
             NetworkStream stream = _client.GetStream();
             
             byte[] buffer = new byte[2048];

@@ -38,6 +38,6 @@ public static class Theme {
         } },
         { ConsoleThemeStyle.LevelFatal, new SystemConsoleThemeStyle {
             Foreground = ConsoleColor.DarkMagenta
-        } },
+        } }
     };
-};
+}

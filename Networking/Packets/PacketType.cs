@@ -5,5 +5,7 @@ public enum PacketType {
     Ready, Verified,
     
     ModuleLoadResult,
-    AssemblyLoadResult
+    AssemblyLoadResult,
+    
+    Callback
 }

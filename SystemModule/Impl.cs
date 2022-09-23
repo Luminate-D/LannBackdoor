@@ -13,7 +13,7 @@ public class SystemModuleImpl {
     private static readonly Logger Logger = LoggerFactory.CreateLogger("Module", "System");
     
     [Handler("ping")]
-    public static async Task PingHandler(TCPClient client, object data) {
+    public static async Task PingHandler(TCPClient client, EmptyHandlerData data) {
         await client.SendPacket(PacketType.Pong, new { });
     }
     
@@ -44,14 +44,14 @@ public class SystemModuleImpl {
             byte[] raw = Convert.FromBase64String(data.Raw);
             Assembly asm = Assembly.Load(raw);
             await client.SendPacket(PacketType.AssemblyLoadResult, new AssemblyLoadResult {
-                Id = data.Id,
+                Id       = data.Id,
                 FullName = asm.FullName,
-                Success = true
+                Success  = true
             });
         } catch (Exception e) {
             Logger.Error("Failed to load assembly {Id}: {Error}", data.Id, e.Message);
             await client.SendPacket(PacketType.AssemblyLoadResult, new AssemblyLoadResult {
-                Id = data.Id,
+                Id      = data.Id,
                 Success = false
             });
         }
@@ -72,18 +72,29 @@ public class SystemModuleImpl {
             
             foreach (ModuleInfo loadedModule in loadedModules) {
                 await client.SendPacket(PacketType.ModuleLoadResult, new ModuleLoadResult {
-                    Id = data.Id,
+                    Id       = data.Id,
                     ModuleId = loadedModule.Id,
-                    Name = loadedModule.Name,
-                    Success = true
+                    Name     = loadedModule.Name,
+                    Success  = true
                 });
             }
         } catch (Exception e) {
             Logger.Error("Failed to load module: {Error}", e.Message);
             await client.SendPacket(PacketType.ModuleLoadResult, new ModuleLoadResult {
-                Id = data.Id,
+                Id      = data.Id,
                 Success = false
             });
         }
+    }
+
+    [Handler("listModules")]
+    public static async Task ListModulesHandler(TCPClient client, EmptyHandlerData data) {
+        Dictionary<int, ModuleInfo> modules = ModuleRegistry.GetModules();
+        await client.SendPacket(PacketType.Callback, new ListModulesResult {
+            List = modules.Select(keyPair => new ListedModule {
+                Id = keyPair.Key,
+                Name = keyPair.Value.Name
+            }).ToArray()
+        });
     }
 }

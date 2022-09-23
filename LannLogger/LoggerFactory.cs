@@ -12,7 +12,7 @@ public static class LoggerFactory {
                 outputTemplate: "[{Timestamp:HH:mm:ss}] [{Level}] " + logWhich + " {Message:lj}{NewLine}{Exception}",
                 theme: new SystemConsoleTheme(Theme.Data));
 
-        if (Constants.DEBUG) cfg.MinimumLevel.Verbose();
+        if (Constants.Debug) cfg.MinimumLevel.Verbose();
         else cfg.MinimumLevel.Information();
 
         return cfg.CreateLogger();
