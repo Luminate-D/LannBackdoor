@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json.Nodes;
 using LannLogger;
 using Networking.Packets;
+using Networking.Structures;
 using Newtonsoft.Json;
 
 namespace Networking;
@@ -75,17 +76,14 @@ public class TCPClient {
         }
     }
 
-    public async Task SendPacket(PacketType type, object data) {
-        NetworkStream stream = _client.GetStream();
-        string dataString = JsonConvert.SerializeObject(data);
-
-        byte[] dataBytes = Encoding.UTF8.GetBytes(dataString);
-        byte[] typeBytes = BitConverter.GetBytes((int) type);
-        byte[] size = BitConverter.GetBytes(dataBytes.Length + typeBytes.Length);
-        byte[] resultBytes = size.Concat(typeBytes).Concat(dataBytes).ToArray();
-
+    public async Task SendPacket(ClientPacket data) {
+        NetworkStream stream     = _client.GetStream();
+        string        dataString = JsonConvert.SerializeObject(data);
+        byte[]        size       = BitConverter.GetBytes(dataString.Length);
+        byte[]        dataBytes  = Encoding.UTF8.GetBytes(dataString);
+        
         try {
-            await stream.WriteAsync(resultBytes);
+            await stream.WriteAsync(size.Concat(dataBytes).ToArray());
         } catch {
             OnClose(this, EventArgs.Empty);
         }

