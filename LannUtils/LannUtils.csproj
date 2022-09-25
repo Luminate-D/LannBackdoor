@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\LannConstants\LannConstants.csproj" />
+        <ProjectReference Include="..\LannConstants\LannConstants.csproj"/>
     </ItemGroup>
 
 </Project>

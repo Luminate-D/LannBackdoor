@@ -1,11 +1,11 @@
-﻿namespace LannUtils; 
+﻿namespace LannUtils;
 
 public class IdPool {
-    private int _current;
+    private          int       _current;
     private readonly List<int> _pool;
-    
+
     public IdPool() {
-        _pool = new List<int>();
+        _pool    = new List<int>();
         _current = 0;
     }
 
@@ -13,7 +13,6 @@ public class IdPool {
         if (_pool.Count <= 0) return _current++;
         _pool.RemoveAt(0);
         return _pool.First();
-
     }
 
     public void Dispose(int id) {

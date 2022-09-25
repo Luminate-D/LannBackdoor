@@ -1,11 +1,12 @@
-﻿namespace Networking.Packets; 
+﻿namespace Networking.Packets;
 
 public enum PacketType {
     Pong,
-    Ready, Verified,
-    
+    Ready,
+    Verified,
+
     ModuleLoadResult,
     AssemblyLoadResult,
-    
+
     Callback
 }

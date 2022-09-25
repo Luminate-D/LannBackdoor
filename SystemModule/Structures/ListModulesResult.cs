@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace SystemModule.Structures; 
+namespace SystemModule.Structures;
 
 public class ListedModule {
     [JsonProperty("id")]   public int    Id;

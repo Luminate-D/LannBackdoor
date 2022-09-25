@@ -1,11 +1,9 @@
 ﻿using Newtonsoft.Json;
 
-namespace SystemModule.Structures; 
+namespace SystemModule.Structures;
 
 public class VerifyHandlerData {
-    [JsonProperty("timestamp")]
-    public string Timestamp { get; set; }
-    
-    [JsonProperty("signature")]
-    public string Signature { get; set; }
+    [JsonProperty("timestamp")] public string Timestamp { get; set; }
+
+    [JsonProperty("signature")] public string Signature { get; set; }
 }

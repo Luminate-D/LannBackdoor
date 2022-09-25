@@ -1,6 +1,6 @@
 ﻿using LannConstants;
 
-namespace LannUtils; 
+namespace LannUtils;
 
 public static class Utils {
     public static string CreateUrl(int serverId) {

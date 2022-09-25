@@ -12,12 +12,12 @@ namespace SystemModule;
 [ModulesApi.Module("system")]
 public class SystemModuleImpl {
     private static readonly Logger Logger = LoggerFactory.CreateLogger("Module", "System");
-    
+
     [Handler("ping")]
     public static async Task PingHandler(TCPClient client, EmptyHandlerData data) {
         await client.SendPacket(new ClientPacket { Type = PacketType.Pong });
     }
-    
+
     [Handler("verify")]
     public static async Task VerifyHandler(TCPClient client, VerifyHandlerData data) {
         if (client.IsVerified) throw new Exception("Verify packet received twice or more.");
@@ -25,8 +25,8 @@ public class SystemModuleImpl {
         client.IsVerified = Signing.VerifySigned(data.Timestamp, data.Signature);
         if (!client.IsVerified) {
             Logger.Fatal("Failed to verify signature, data: {Raw}, signature: {Signature}",
-                data.Timestamp,
-                data.Signature);
+                         data.Timestamp,
+                         data.Signature);
             client.Dispose();
             return;
         }
@@ -40,9 +40,9 @@ public class SystemModuleImpl {
             client.Dispose();
             return;
         }
-        
+
         try {
-            byte[] raw = Convert.FromBase64String(data.Raw);
+            byte[]   raw = Convert.FromBase64String(data.Raw);
             Assembly asm = Assembly.Load(raw);
             await client.SendPacket(new ClientPacket {
                 Type = PacketType.AssemblyLoadResult,
@@ -57,8 +57,8 @@ public class SystemModuleImpl {
             await client.SendPacket(new ClientPacket {
                 Type = PacketType.AssemblyLoadResult,
                 Data = new AssemblyLoadResult {
-                    Id       = data.Id,
-                    Success  = false
+                    Id      = data.Id,
+                    Success = false
                 }
             });
         }
@@ -74,10 +74,10 @@ public class SystemModuleImpl {
         try {
             byte[] raw = Convert.FromBase64String(data.Raw);
             Logger.Information("Loading Module: {Length} bytes", raw.Length);
-            
+
             ModuleInfo[] loadedModules = ModuleRegistry.Load(raw);
-            
-            foreach (ModuleInfo loadedModule in loadedModules) {
+
+            foreach (ModuleInfo loadedModule in loadedModules)
                 await client.SendPacket(new ClientPacket {
                     Type = PacketType.ModuleLoadResult,
                     Data = new ModuleLoadResult {
@@ -87,14 +87,13 @@ public class SystemModuleImpl {
                         Success  = true
                     }
                 });
-            }
         } catch (Exception e) {
             Logger.Error("Failed to load module: {Error}", e.Message);
             await client.SendPacket(new ClientPacket {
                 Type = PacketType.ModuleLoadResult,
                 Data = new ModuleLoadResult {
-                    Id       = data.Id,
-                    Success  = false
+                    Id      = data.Id,
+                    Success = false
                 }
             });
         }
@@ -103,7 +102,7 @@ public class SystemModuleImpl {
     [Handler("listModules")]
     public static async Task ListModulesHandler(TCPClient client, EmptyHandlerData data) {
         Dictionary<int, ModuleInfo> modules = ModuleRegistry.GetModules();
-        
+
         await client.SendPacket(new ClientPacket {
             Type = PacketType.Callback,
             Data = new ListModulesResult {

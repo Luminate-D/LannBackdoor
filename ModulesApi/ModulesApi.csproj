@@ -8,8 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\LannUtils\LannUtils.csproj" />
-      <ProjectReference Include="..\Networking\Networking.csproj" />
+        <ProjectReference Include="..\LannUtils\LannUtils.csproj"/>
+        <ProjectReference Include="..\Networking\Networking.csproj"/>
     </ItemGroup>
 
 </Project>

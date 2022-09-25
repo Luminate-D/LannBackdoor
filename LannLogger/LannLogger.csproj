@@ -8,12 +8,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Serilog" Version="2.12.0" />
-      <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+        <PackageReference Include="Serilog" Version="2.12.0"/>
+        <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\LannConstants\LannConstants.csproj" />
+        <ProjectReference Include="..\LannConstants\LannConstants.csproj"/>
     </ItemGroup>
 
 </Project>
