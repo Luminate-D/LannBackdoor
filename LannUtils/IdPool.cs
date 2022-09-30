@@ -1,11 +1,11 @@
 ﻿namespace LannUtils;
 
 public class IdPool {
-    private          int       _current;
+    private int _current;
     private readonly List<int> _pool;
 
     public IdPool() {
-        _pool    = new List<int>();
+        _pool = new List<int>();
         _current = 0;
     }
 

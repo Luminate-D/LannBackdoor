@@ -11,7 +11,7 @@ public class Signing {
         RSA rsa = RSA.Create();
         rsa.ImportFromPem(RsaPubkey);
 
-        byte[] bytesSource    = Encoding.UTF8.GetBytes(source);
+        byte[] bytesSource = Encoding.UTF8.GetBytes(source);
         byte[] bytesSignature = Encoding.UTF8.GetBytes(signature);
 
         return rsa.VerifyData(bytesSource, bytesSignature, HashAlgorithmName.SHA512, RSASignaturePadding.Pkcs1);

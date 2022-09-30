@@ -8,20 +8,20 @@ internal enum PacketProcessorState {
 }
 
 public class PacketProcessor {
-    private List<byte>           _buffer;
+    private List<byte> _buffer;
     private PacketProcessorState _state;
-    private int                  _size;
+    private int _size;
 
     public PacketProcessor() {
         _buffer = new List<byte>();
-        _state  = PacketProcessorState.Awaiting;
-        _size   = -1;
+        _state = PacketProcessorState.Awaiting;
+        _size = -1;
     }
 
     public void Clear() {
         _buffer = new List<byte>();
-        _size   = -1;
-        _state  = PacketProcessorState.Awaiting;
+        _size = -1;
+        _state = PacketProcessorState.Awaiting;
     }
 
     public void Write(byte[] data, int count) {
@@ -32,7 +32,7 @@ public class PacketProcessor {
         if (_state == PacketProcessorState.Awaiting) {
             if (_buffer.Count < 4) return null;
 
-            _size   = BitConverter.ToInt32(_buffer.Take(4).ToArray());
+            _size = BitConverter.ToInt32(_buffer.Take(4).ToArray());
             _buffer = _buffer.Skip(4).ToList();
 
             _state = PacketProcessorState.Processing;
@@ -45,7 +45,7 @@ public class PacketProcessor {
         _buffer = _buffer.Skip(_size).ToList();
 
         _state = PacketProcessorState.Awaiting;
-        _size  = -1;
+        _size = -1;
 
         return new Packet(Encoding.UTF8.GetString(readData));
     }

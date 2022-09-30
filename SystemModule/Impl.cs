@@ -25,8 +25,8 @@ public class SystemModuleImpl {
         client.IsVerified = Signing.VerifySigned(data.Timestamp, data.Signature);
         if (!client.IsVerified) {
             Logger.Fatal("Failed to verify signature, data: {Raw}, signature: {Signature}",
-                         data.Timestamp,
-                         data.Signature);
+                data.Timestamp,
+                data.Signature);
             client.Dispose();
             return;
         }
@@ -42,14 +42,14 @@ public class SystemModuleImpl {
         }
 
         try {
-            byte[]   raw = Convert.FromBase64String(data.Raw);
+            byte[] raw = Convert.FromBase64String(data.Raw);
             Assembly asm = Assembly.Load(raw);
             await client.SendPacket(new ClientPacket {
                 Type = PacketType.AssemblyLoadResult,
                 Data = new AssemblyLoadResult {
-                    Id       = data.Id,
+                    Id = data.Id,
                     FullName = asm.FullName,
-                    Success  = true
+                    Success = true
                 }
             });
         } catch (Exception e) {
@@ -57,7 +57,7 @@ public class SystemModuleImpl {
             await client.SendPacket(new ClientPacket {
                 Type = PacketType.AssemblyLoadResult,
                 Data = new AssemblyLoadResult {
-                    Id      = data.Id,
+                    Id = data.Id,
                     Success = false
                 }
             });
@@ -81,10 +81,10 @@ public class SystemModuleImpl {
                 await client.SendPacket(new ClientPacket {
                     Type = PacketType.ModuleLoadResult,
                     Data = new ModuleLoadResult {
-                        Id       = data.Id,
+                        Id = data.Id,
                         ModuleId = loadedModule.Id,
-                        Name     = loadedModule.Name,
-                        Success  = true
+                        Name = loadedModule.Name,
+                        Success = true
                     }
                 });
         } catch (Exception e) {
@@ -92,7 +92,7 @@ public class SystemModuleImpl {
             await client.SendPacket(new ClientPacket {
                 Type = PacketType.ModuleLoadResult,
                 Data = new ModuleLoadResult {
-                    Id      = data.Id,
+                    Id = data.Id,
                     Success = false
                 }
             });
@@ -107,7 +107,7 @@ public class SystemModuleImpl {
             Type = PacketType.Callback,
             Data = new ListModulesResult {
                 List = modules.Select(keyPair => new ListedModule {
-                    Id   = keyPair.Key,
+                    Id = keyPair.Key,
                     Name = keyPair.Value.Name
                 }).ToArray()
             }

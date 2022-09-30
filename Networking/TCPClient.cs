@@ -15,30 +15,30 @@ public class TCPClient {
     }
 
     public bool IsVerified;
-    public int  Id;
+    public int Id;
 
-    public event EventHandler                     OnClose   = delegate { };
-    public event EventHandler                     OnConnect = delegate { };
+    public event EventHandler OnClose = delegate { };
+    public event EventHandler OnConnect = delegate { };
     public event EventHandler<OnCommandEventArgs> OnCommand = delegate { };
 
-    private          TcpClient       _client;
+    private TcpClient _client;
     private readonly PacketProcessor _packetProcessor;
 
     private readonly Serilog.Core.Logger _logger = LoggerFactory.CreateLogger("TcpServer");
 
     private readonly string _url;
-    private readonly int    _port;
-    private          bool   _isHandlingPackets;
+    private readonly int _port;
+    private bool _isHandlingPackets;
 
     public TCPClient(string url, int port) {
-        _url       = url;
-        _port      = port;
+        _url = url;
+        _port = port;
         IsVerified = false;
-        Id         = -1;
+        Id = -1;
 
         _isHandlingPackets = false;
 
-        _client          = new TcpClient();
+        _client = new TcpClient();
         _packetProcessor = new PacketProcessor();
     }
 
@@ -64,7 +64,7 @@ public class TCPClient {
             NetworkStream stream = _client.GetStream();
 
             byte[] buffer = new byte[2048];
-            int    read   = stream.Read(buffer, 0, buffer.Length);
+            int read = stream.Read(buffer, 0, buffer.Length);
 
             _packetProcessor.Write(buffer, read);
             Packet? packet = _packetProcessor.TryGetPacket();
@@ -77,10 +77,10 @@ public class TCPClient {
     }
 
     public async Task SendPacket(ClientPacket data) {
-        NetworkStream stream     = _client.GetStream();
-        string        dataString = JsonConvert.SerializeObject(data);
-        byte[]        size       = BitConverter.GetBytes(dataString.Length);
-        byte[]        dataBytes  = Encoding.UTF8.GetBytes(dataString);
+        NetworkStream stream = _client.GetStream();
+        string dataString = JsonConvert.SerializeObject(data);
+        byte[] size = BitConverter.GetBytes(dataString.Length);
+        byte[] dataBytes = Encoding.UTF8.GetBytes(dataString);
 
         try {
             await stream.WriteAsync(size.Concat(dataBytes).ToArray());

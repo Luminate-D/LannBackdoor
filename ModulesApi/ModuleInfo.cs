@@ -1,13 +1,13 @@
 ﻿namespace ModulesApi;
 
 public class ModuleInfo {
-    public readonly  int           Id;
-    public readonly  string        Name;
+    public readonly int Id;
+    public readonly string Name;
     private readonly HandlerInfo[] _handlers;
 
     public ModuleInfo(int id, string name, HandlerInfo[] handlers) {
-        Id        = id;
-        Name      = name;
+        Id = id;
+        Name = name;
         _handlers = handlers;
     }
 
