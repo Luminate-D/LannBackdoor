@@ -31,5 +31,6 @@ public static class Evasion {
 
     public static async Task Protect() {
         Logger.Verbose("TODO: Protect");
+        await AntiDump.Run();
     }
 }
