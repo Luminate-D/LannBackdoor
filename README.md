@@ -4,7 +4,7 @@
 - [ ] LAN Spread
 - [x] Anti VM / Fake Environment / Sandbox
 - [x] Anti Debug
-🟦 Modules
+- [ ] Modules
   - [x] System Module - Loaded by default
     - [x] Ping
     - [x] RSA Verify - Verify that server is original
