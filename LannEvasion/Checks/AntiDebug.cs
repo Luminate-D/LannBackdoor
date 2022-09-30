@@ -4,9 +4,9 @@ using System.Runtime.InteropServices;
 namespace LannEvasion.Checks;
 
 public class AntiDebug : Check {
-[DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
-[return: MarshalAs(UnmanagedType.Bool)]
-private static extern bool CheckRemoteDebuggerPresent(IntPtr hProcess, [MarshalAs(UnmanagedType.Bool)] ref bool isDebuggerPresent);
+    [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool CheckRemoteDebuggerPresent(IntPtr hProcess, [MarshalAs(UnmanagedType.Bool)] ref bool isDebuggerPresent);
 
     [DllImport("kernel32.dll", CharSet=CharSet.Auto, ExactSpelling=true)]
     private static extern bool IsDebuggerPresent();

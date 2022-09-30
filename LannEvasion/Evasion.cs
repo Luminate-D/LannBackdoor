@@ -20,7 +20,6 @@ public static class Evasion {
     }
 
     public static async Task Protect() {
-        Logger.Information("Injecting AntiDump");
-        await AntiDump.Run();
+        Logger.Verbose("TODO: Protect");
     }
 }
