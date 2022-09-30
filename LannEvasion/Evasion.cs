@@ -14,19 +14,14 @@ public static class Evasion {
         new Hardware()
     };
     
-    public static async Task RunCheck() {
+    public static async Task<bool> RunCheck() {
         Logger.Information("Running evasion check");
 
         foreach (Check check in Checks) {
-            Thread t = new(new ThreadStart(async () => {
-                while (true) {
-                    if (await check.Run())
-                        Environment.Exit(0);
-                    Thread.Sleep(5000);
-                }
-            }));
-            t.Start();
+            if (await check.Run()) return true;
         }
+
+        return false;
     }
 
     public static async Task Protect() {
