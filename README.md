@@ -1,12 +1,45 @@
-# LannBackdoor
-
-- [x] 123
-  - [x] 321
-  - [x] 654
-    - [x] sus
-    - [ ] 0
-    - [ ] 123
-  - [x] 654
-    - [x] sus
-    - [ ] 0
-    - [ ] 123
+- [x] Connecting to server using pattern xxxx-{0}.dom
+- [x] Hiding window when Debug = false
+- [ ] USB Spread
+- [ ] LAN Spread
+- [x] Anti VM / Fake Environment / Sandbox
+- [x] Anti Debug
+🟦 Modules
+  - [x] System Module - Loaded by default
+    - [x] Ping
+    - [x] RSA Verify - Verify that server is original
+    - [x] Load Assembly - Load assemblies required by other modules
+    - [x] Load Module - Load modules
+    - [x] List Modules
+  - [x] Screen Module
+    - [x] Take Screenshot
+    - [ ] Record Video
+    - [ ] UDP Video Streaming
+      - [ ] Quality Settings
+      - [ ] FPS Settings
+    - [ ] GDI+ Addon
+      - [ ] Draw image over screen
+      - [ ] Play GIF/MP4 over screen
+  - [x] Shell Module
+    - [x] Open / Close Shell (by ID)
+    - [x] Write Commands to Shell
+    - [x] Log <std>, open, close back
+  - [ ] FS Module
+    - [ ] Download File
+    - [ ] Upload File
+    - [ ] Upload ZIP Archived Folder
+  - [ ] Audio Module
+    - [ ] Record Audio
+    - [ ] UDP Audio Streaming (Two sides)
+    - [ ] Play Audio
+  - [ ] Camera Module
+    - [ ] Take Camera Snapshot
+    - [ ] Record Video
+    - [ ] UDP Video Streaming
+  - [ ] Fun Module
+    - [ ] Block Input (Keyboard / Mouse)
+    - [ ] Inverse Mouse
+    - [ ] Show / Hide Mouse
+    - [ ] Turn monitor off
+    - [ ] Shutdown / Restart PC
+    - [ ] Force Keyboard Write
