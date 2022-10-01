@@ -18,6 +18,13 @@ $ git clone https://github.com/Luminate-D/LannBackdoor.git
 
 ##### If you have got any issues, feel free to report them at the [issues page](https://github.com/Luminate-D/LannBackdoor/issues)
 
+### Loading Modules
+- Modules and their dependencies are loaded by server
+- If you want to bundle module with backdoor, insert this code inside `Program.cs`
+```cs
+ModuleRegistry.LoadByAssembly(typeof(HERE_PUT_MODULE_CLASS).Assembly);
+```
+
 ## Features & TODO List
 - [x] Connecting to server using pattern xxxx-{0}.dom
 - [x] Hiding window when Debug = false
