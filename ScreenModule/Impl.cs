@@ -21,16 +21,27 @@ public class ScreenModuleImpl {
         Logger.Information("Taking screenshot, dimensions: {X}:{Y}",
             rect.Width,
             rect.Height);
-        
-        using MemoryStream stream = Capture.Screenshot(rect);
-        byte[] bytes = stream.ToArray();
-        
-        Logger.Information("Took screenshot, size: {Bytes} bytes",
-            bytes.Length);
 
+        TakeScreenshotResult result = new();
+        byte[] bytes = null;
+        try {
+            using MemoryStream stream = Capture.Screenshot(rect);
+            bytes = stream.ToArray();
+
+            Logger.Information("Took screenshot, size: {Bytes} bytes",
+                bytes.Length);
+
+            result.Data = bytes;
+            result.Success = true;
+        } catch (Exception error) {
+            Logger.Error("Failed to take screenshot: {Error}", error);
+            result.Success = false;
+            result.Error = error.Message;
+        }
+        
         await client.SendPacket(new ClientPacket {
             Type = PacketType.Callback,
-            Data = new TakeScreenshotResult { Data = bytes }
+            Data = result
         });
     }
 }

@@ -20,6 +20,8 @@ public class ShellModuleImpl {
     [Handler("create")]
     public static async Task CreateHandler(TCPClient client, CreateHandlerData data) {
         ShellInstance instance = new(_idPool.NextId(), data.FileName);
+        CreateResult result = new();
+        
         instance.OnClose += (_, _) => {
             Logger.Information("Shell with ID {ID} closed", instance.Id);
             _idPool.Dispose(instance.Id);
@@ -53,97 +55,90 @@ public class ShellModuleImpl {
             instance.Start();
             _shellInstances.Add(instance);
 
-            await client.SendPacket(new ClientPacket {
-                Type = PacketType.Callback,
-                Data = new CreateResult {
-                    Id = instance.Id,
-                    Success = true
-                }
-            });
+            result.Success = true;
+            result.Id = instance.Id;
         } catch (Exception error) {
             Logger.Error("Failed to start shell: {Error}", error);
-            await client.SendPacket(new ClientPacket {
-                Type = PacketType.Callback,
-                Data = new CreateResult {
-                    Success = false
-                }
-            });
+            result.Success = false;
+            result.Error = error.Message;
             
             _idPool.Dispose(instance.Id);
         }
+        
+        await client.SendPacket(new ClientPacket {
+            Type = PacketType.Callback,
+            Data = result
+        });
     }
 
     [Handler("write")]
     public static async Task WriteHandler(TCPClient client, WriteHandlerData data) {
         ShellInstance instance = _shellInstances.Find(instance => instance.Id == data.Id);
+        WriteResult result = new();
+        
         if (instance == null) {
             Logger.Error("Unknown shell: {Id}", data.Id);
+            result.Success = false;
+            result.Id = data.Id;
+            result.Error = "Unknown shell";
+            
             await client.SendPacket(new ClientPacket {
                 Type = PacketType.Callback,
-                Data = new WriteResult {
-                    Id = data.Id,
-                    Success = false,
-                    ErrorCode = 0
-                }
+                Data = result
             });
+            
+            return;
         }
         
         try {
             await instance.Write(data.Data);
-            await client.SendPacket(new ClientPacket {
-                Type = PacketType.Callback,
-                Data = new WriteResult {
-                    Id = data.Id,
-                    Success = true
-                }
-            });
+            result.Success = true;
+            result.Id = data.Id;
         } catch (Exception error) {
             Logger.Error("Failed to Write to Shell {ID}: {Error}", data.Id, error);
-            await client.SendPacket(new ClientPacket {
-                Type = PacketType.Callback,
-                Data = new WriteResult {
-                    Id = data.Id,
-                    Success = false,
-                    ErrorCode = 1
-                }
-            });
+            result.Success = false;
+            result.Error = error.Message;
+            result.Id = data.Id;
         }
+        
+        await client.SendPacket(new ClientPacket {
+            Type = PacketType.Callback,
+            Data = result
+        });
     }
 
     [Handler("close")]
     public static async Task CloseHandler(TCPClient client, CloseHandlerData data) {
         ShellInstance instance = _shellInstances.Find(instance => instance.Id == data.Id);
+        CloseResult result = new();
+        
         if (instance == null) {
             Logger.Error("Unknown shell: {Id}", data.Id);
+            result.Id = data.Id;
+            result.Success = false;
+            result.Error = "Unknown shell";
+            
             await client.SendPacket(new ClientPacket {
                 Type = PacketType.Callback,
-                Data = new CloseResult {
-                    Id = data.Id,
-                    Success = false,
-                    ErrorCode = 0
-                }
+                Data = result
             });
+            return;
         }
 
         try {
             instance.Close();
-            await client.SendPacket(new ClientPacket {
-                Type = PacketType.Callback,
-                Data = new CloseResult {
-                    Id = data.Id,
-                    Success = true
-                }
-            });
+            result.Id = data.Id;
+            result.Success = true;
         } catch (Exception error) {
             Logger.Error("Failed to Close Shell {ID}: {Error}", data.Id, error);
-            await client.SendPacket(new ClientPacket {
-                Type = PacketType.Callback,
-                Data = new CloseResult {
-                    Id = data.Id,
-                    Success = false,
-                    ErrorCode = 1
-                }
-            });
+            result.Success = false;
+            result.Id = data.Id;
+            result.Error = error.Message;
         }
+        
+        await client.SendPacket(new ClientPacket {
+            Type = PacketType.Callback,
+            Data = result
+        });
     }
 }
