@@ -48,6 +48,7 @@ ModuleRegistry.LoadByAssembly(typeof(HERE_PUT_MODULE_CLASS).Assembly);
     - [ ] GDI+ Addon
       - [ ] Draw image over screen
       - [ ] Play GIF/MP4 over screen
+      - [ ] Glitching / Screen Floating
   - [x] Shell Module
     - [x] Open / Close Shell (by ID)
     - [x] Write Commands to Shell
