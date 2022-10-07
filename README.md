@@ -71,3 +71,7 @@ ModuleRegistry.LoadByAssembly(typeof(HERE_PUT_MODULE_CLASS).Assembly);
     - [ ] Turn monitor off
     - [ ] Shutdown / Restart PC
     - [ ] Force Keyboard Write
+  - [ ] Other
+    - [ ] Install Driver
+    - [ ] Printer (der Drucker)
+      - [ ] Print Local Image / From URL
