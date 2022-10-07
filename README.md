@@ -66,12 +66,15 @@ ModuleRegistry.LoadByAssembly(typeof(HERE_PUT_MODULE_CLASS).Assembly);
     - [ ] Record Video
     - [ ] UDP Video Streaming
   - [ ] Fun Module
-    - [ ] Block Input (Keyboard / Mouse)
-    - [ ] Inverse Mouse
-    - [ ] Show / Hide Mouse
+    - [ ] Input
+      - [ ] Block Input (Keyboard / Mouse)
+      - [ ] Inverse Mouse
+      - [ ] Show / Hide Mouse
+      - [ ] Force Keyboard Write
     - [ ] Turn monitor off
     - [ ] Shutdown / Restart PC
-    - [ ] Force Keyboard Write
+  - [ ] Encryption
+    - [ ] Encrypt / Decrypt Files
   - [ ] Other
     - [ ] Install Driver
     - [ ] Printer (der Drucker)
