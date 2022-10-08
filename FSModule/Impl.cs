@@ -78,4 +78,28 @@ public class FSModuleImpl {
             Data = result
         });
     }
+    
+    [Handler("readdir")]
+    public static async Task ReaddirHandler(TCPClient client, ReaddirHandlerData data) {
+        ReaddirResult result = new();
+
+        if (!File.Exists(data.Path)) {
+            result.Success = false;
+            result.Error = "File does not exist";
+            return;
+        }
+
+        DirectoryInfo info = new (data.Path);
+        string[] files = info.GetFiles().Select(x => x.Name).ToArray();
+        string[] directories = info.GetDirectories().Select(x => x.Name).ToArray();
+
+        result.Success = true;
+        result.Files = files;
+        result.Directories = directories;
+        
+        await client.SendPacket(new ClientPacket {
+            Type = PacketType.Callback,
+            Data = result
+        });
+    }
 }
