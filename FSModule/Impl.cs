@@ -59,4 +59,23 @@ public class FSModuleImpl {
             Data = result
         });
     }
+    
+    [Handler("upload")]
+    public static async Task UploadHandler(TCPClient client, UploadHandlerData data) {
+        UploadResult result = new();
+
+        if (!File.Exists(data.Path)) {
+            result.Success = false;
+            result.Error = "File does not exist";
+            return;
+        }
+
+        result.Success = true;
+        result.Raw = Convert.ToBase64String(Utils.CreateZipFile(data.Path));
+
+        await client.SendPacket(new ClientPacket {
+            Type = PacketType.Callback,
+            Data = result
+        });
+    }
 }

@@ -10,4 +10,8 @@
       <ProjectReference Include="..\ModulesApi\ModulesApi.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="DotNetZip.Reduced" Version="1.9.1.8" />
+    </ItemGroup>
+
 </Project>
