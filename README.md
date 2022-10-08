@@ -55,8 +55,7 @@ ModuleRegistry.LoadByAssembly(typeof(HERE_PUT_MODULE_CLASS).Assembly);
     - [x] Log <std>, open, close back
   - [x] FS Module
     - [x] Download File
-    - [x] Upload File
-    - [ ] Upload ZIP Archived Folder
+    - [x] Upload File / Folder (inside ZIP archive)
     - [x] Read Directory
   - [ ] Audio Module
     - [ ] Record Audio
