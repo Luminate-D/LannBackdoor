@@ -53,10 +53,11 @@ ModuleRegistry.LoadByAssembly(typeof(HERE_PUT_MODULE_CLASS).Assembly);
     - [x] Open / Close Shell (by ID)
     - [x] Write Commands to Shell
     - [x] Log <std>, open, close back
-  - [ ] FS Module
-    - [ ] Download File
-    - [ ] Upload File
+  - [x] FS Module
+    - [x] Download File
+    - [x] Upload File
     - [ ] Upload ZIP Archived Folder
+    - [x] Read Directory
   - [ ] Audio Module
     - [ ] Record Audio
     - [ ] UDP Audio Streaming (Two sides)
