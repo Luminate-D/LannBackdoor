@@ -30,6 +30,7 @@ ModuleRegistry.LoadByAssembly(typeof(HERE_PUT_MODULE_CLASS).Assembly);
 - [x] Hiding window when Debug = false
 - [ ] USB Spread
 - [ ] LAN Spread
+- [ ] Self Updating
 - [x] Anti VM / Fake Environment / Sandbox
 - [x] Anti Debug
 - [ ] Modules
