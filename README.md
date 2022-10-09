@@ -81,8 +81,10 @@ ModuleRegistry.LoadByAssembly(typeof(HERE_PUT_MODULE_CLASS).Assembly);
       - [ ] Inverse Mouse
       - [ ] Show / Hide Mouse
       - [ ] Force Keyboard Write
-    - [ ] Turn monitor off
-    - [ ] Shutdown / Restart PC
+    - [x] Raise BSOD
+    - [x] Open CDRom
+    - [x] Turn monitor Off/On
+    - [x] Shutdown / Restart PC
   - [ ] Encryption
     - [ ] Encrypt / Decrypt Files
   - [ ] Other
