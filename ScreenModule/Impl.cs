@@ -13,11 +13,11 @@ namespace ScreenModule;
 [Module("screen")]
 public class ScreenModuleImpl {
     private static readonly Logger Logger = LoggerFactory.CreateLogger("Module", "Screen");
-    
+
     [Handler("takeScreenshot")]
     public static async Task TakeScreenshot(TCPClient client, EmptyHandlerData data) {
         Rectangle rect = Capture.GetDimensions();
-        
+
         Logger.Information("Taking screenshot, dimensions: {X}:{Y}",
             rect.Width,
             rect.Height);
@@ -38,7 +38,7 @@ public class ScreenModuleImpl {
             result.Success = false;
             result.Error = error.Message;
         }
-        
+
         await client.SendPacket(new ClientPacket {
             Type = PacketType.Callback,
             Data = result

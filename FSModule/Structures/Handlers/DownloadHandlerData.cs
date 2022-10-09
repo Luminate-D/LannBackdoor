@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace FSModule.Structures.Handlers; 
+namespace FSModule.Structures.Handlers;
 
 public class DownloadHandlerData {
     [JsonProperty("sourceUrl")] public string? SourceURL;

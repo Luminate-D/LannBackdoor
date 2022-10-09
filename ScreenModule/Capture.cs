@@ -2,7 +2,7 @@
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-namespace ScreenModule; 
+namespace ScreenModule;
 
 #pragma warning disable CA1416
 
@@ -13,7 +13,7 @@ public static class Capture {
     public static Rectangle GetDimensions() {
         return new Rectangle(0, 0, GetSystemMetrics(0), GetSystemMetrics(1));
     }
-    
+
     public static MemoryStream Screenshot(Rectangle rect) {
         Bitmap bitmap = new(rect.Width, rect.Height, PixelFormat.Format32bppArgb);
         Graphics captureGraphics = Graphics.FromImage(bitmap);
@@ -21,7 +21,7 @@ public static class Capture {
         captureGraphics.CopyFromScreen(0, 0, 0, 0
             , new Size(bitmap.Width, bitmap.Height), CopyPixelOperation.SourceCopy);
 
-        MemoryStream stream = new MemoryStream();
+        MemoryStream stream = new();
         bitmap.Save(stream, ImageFormat.Png);
         stream.Seek(0, SeekOrigin.Begin);
 

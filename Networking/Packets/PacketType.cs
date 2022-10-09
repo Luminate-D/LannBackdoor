@@ -8,5 +8,6 @@ public enum PacketType {
     ModuleLoadResult,
     AssemblyLoadResult,
 
-    Callback, Message
+    Callback,
+    Message
 }

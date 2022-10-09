@@ -13,7 +13,7 @@ namespace ShellModule;
 [Module("shell")]
 public class ShellModuleImpl {
     private static readonly Logger Logger = LoggerFactory.CreateLogger("Module", "Shell");
-    
+
     private static readonly IdPool _idPool = new();
     private static readonly List<ShellInstance> _shellInstances = new();
 
@@ -21,7 +21,7 @@ public class ShellModuleImpl {
     public static async Task CreateHandler(TCPClient client, CreateHandlerData data) {
         ShellInstance instance = new(_idPool.NextId(), data.FileName);
         CreateResult result = new();
-        
+
         instance.OnClose += (_, _) => {
             Logger.Information("Shell with ID {ID} closed", instance.Id);
             _idPool.Dispose(instance.Id);
@@ -38,7 +38,7 @@ public class ShellModuleImpl {
                 }
             });
         };
-        
+
         instance.StdErr += async (_, args) => {
             Logger.Information("Shell [{ID}] StdErr: \"{Data}\"", args.Data);
             await client.SendPacket(new ClientPacket {
@@ -61,10 +61,10 @@ public class ShellModuleImpl {
             Logger.Error("Failed to start shell: {Error}", error);
             result.Success = false;
             result.Error = error.Message;
-            
+
             _idPool.Dispose(instance.Id);
         }
-        
+
         await client.SendPacket(new ClientPacket {
             Type = PacketType.Callback,
             Data = result
@@ -75,21 +75,21 @@ public class ShellModuleImpl {
     public static async Task WriteHandler(TCPClient client, WriteHandlerData data) {
         ShellInstance instance = _shellInstances.Find(instance => instance.Id == data.Id);
         WriteResult result = new();
-        
+
         if (instance == null) {
             Logger.Error("Unknown shell: {Id}", data.Id);
             result.Success = false;
             result.Id = data.Id;
             result.Error = "Unknown shell";
-            
+
             await client.SendPacket(new ClientPacket {
                 Type = PacketType.Callback,
                 Data = result
             });
-            
+
             return;
         }
-        
+
         try {
             await instance.Write(data.Data);
             result.Success = true;
@@ -100,7 +100,7 @@ public class ShellModuleImpl {
             result.Error = error.Message;
             result.Id = data.Id;
         }
-        
+
         await client.SendPacket(new ClientPacket {
             Type = PacketType.Callback,
             Data = result
@@ -111,13 +111,13 @@ public class ShellModuleImpl {
     public static async Task CloseHandler(TCPClient client, CloseHandlerData data) {
         ShellInstance instance = _shellInstances.Find(instance => instance.Id == data.Id);
         CloseResult result = new();
-        
+
         if (instance == null) {
             Logger.Error("Unknown shell: {Id}", data.Id);
             result.Id = data.Id;
             result.Success = false;
             result.Error = "Unknown shell";
-            
+
             await client.SendPacket(new ClientPacket {
                 Type = PacketType.Callback,
                 Data = result
@@ -135,7 +135,7 @@ public class ShellModuleImpl {
             result.Id = data.Id;
             result.Error = error.Message;
         }
-        
+
         await client.SendPacket(new ClientPacket {
             Type = PacketType.Callback,
             Data = result

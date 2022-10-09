@@ -8,8 +8,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\LannLogger\LannLogger.csproj" />
-      <ProjectReference Include="..\Utilities\Utilities.csproj" />
+        <ProjectReference Include="..\LannLogger\LannLogger.csproj"/>
+        <ProjectReference Include="..\LBIJson\LBIJson.csproj"/>
+        <ProjectReference Include="..\InstallerUtils\InstallerUtils.csproj"/>
     </ItemGroup>
 
 </Project>

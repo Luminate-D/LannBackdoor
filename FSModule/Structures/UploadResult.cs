@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace FSModule.Structures; 
+namespace FSModule.Structures;
 
 public class UploadResult {
     [JsonProperty("success")] public bool Success;

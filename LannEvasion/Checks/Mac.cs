@@ -1,9 +1,9 @@
 ﻿using System.Net.NetworkInformation;
 
-namespace LannEvasion.Checks; 
+namespace LannEvasion.Checks;
 
 public class Mac : Check {
-    private static readonly List<string> adresses = new List<string>() {
+    private static readonly List<string> adresses = new() {
         "000C29",
         "001C14",
         "005056",

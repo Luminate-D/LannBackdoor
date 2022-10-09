@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace LannBackdoor; 
+namespace LannBackdoor;
 
 public static class PInvoke {
     [DllImport("kernel32.dll")]

@@ -7,8 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\LannLogger\LannLogger.csproj" />
-      <ProjectReference Include="..\ModulesApi\ModulesApi.csproj" />
+        <ProjectReference Include="..\LannLogger\LannLogger.csproj"/>
+        <ProjectReference Include="..\ModulesApi\ModulesApi.csproj"/>
     </ItemGroup>
 
 </Project>

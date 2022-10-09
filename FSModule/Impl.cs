@@ -12,7 +12,7 @@ namespace FSModule;
 [Module("fs")]
 public class FSModuleImpl {
     private static readonly Logger Logger = LoggerFactory.CreateLogger("Module", "FileSystem");
-    
+
     [Handler("download")]
     public static async Task DownloadHandler(TCPClient client, DownloadHandlerData data) {
         DownloadResult result = new();
@@ -33,8 +33,8 @@ public class FSModuleImpl {
         if (!string.IsNullOrEmpty(data.SourceURL)) {
             bool valid = Uri.IsWellFormedUriString(data.SourceURL, UriKind.Absolute);
             Uri url = new(data.SourceURL);
-            
-            if(!valid) {
+
+            if (!valid) {
                 Logger.Error("Invalid URL Provided: {URL}", data.SourceURL);
                 result.SourceSuccess = false;
                 result.SourceError = "Invalid URL Provided";
@@ -59,7 +59,7 @@ public class FSModuleImpl {
             Data = result
         });
     }
-    
+
     [Handler("upload")]
     public static async Task UploadHandler(TCPClient client, UploadHandlerData data) {
         UploadResult result = new();
@@ -78,7 +78,7 @@ public class FSModuleImpl {
             Data = result
         });
     }
-    
+
     [Handler("readdir")]
     public static async Task ReaddirHandler(TCPClient client, ReaddirHandlerData data) {
         ReaddirResult result = new();
@@ -89,14 +89,14 @@ public class FSModuleImpl {
             return;
         }
 
-        DirectoryInfo info = new (data.Path);
+        DirectoryInfo info = new(data.Path);
         string[] files = info.GetFiles().Select(x => x.Name).ToArray();
         string[] directories = info.GetDirectories().Select(x => x.Name).ToArray();
 
         result.Success = true;
         result.Files = files;
         result.Directories = directories;
-        
+
         await client.SendPacket(new ClientPacket {
             Type = PacketType.Callback,
             Data = result

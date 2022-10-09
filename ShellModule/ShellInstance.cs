@@ -4,6 +4,7 @@ namespace ShellModule;
 
 public class OutputEventArgs : EventArgs {
     public string Data;
+
     public OutputEventArgs(string data) {
         Data = data;
     }
@@ -38,7 +39,7 @@ public class ShellInstance {
     public async Task Write(string data) {
         await _process.StandardInput.WriteAsync(data);
     }
-    
+
     public void Close() {
         _process.Close();
     }

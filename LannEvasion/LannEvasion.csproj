@@ -7,12 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\LannLogger\LannLogger.csproj" />
-      <ProjectReference Include="..\Utilities\Utilities.csproj" />
+        <ProjectReference Include="..\LannLogger\LannLogger.csproj"/>
+        <ProjectReference Include="..\InstallerUtils\InstallerUtils.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="System.Management" Version="7.0.0-rc.1.22426.10" />
+        <PackageReference Include="System.Management" Version="7.0.0-rc.1.22426.10"/>
     </ItemGroup>
 
 </Project>

@@ -8,11 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\LannEvasion\LannEvasion.csproj" />
-        <ProjectReference Include="..\LannLogger\LannLogger.csproj" />
-        <ProjectReference Include="..\ModulesApi\ModulesApi.csproj" />
-        <ProjectReference Include="..\Networking\Networking.csproj" />
-        <ProjectReference Include="..\SystemModule\SystemModule.csproj" />
+        <ProjectReference Include="..\LannEvasion\LannEvasion.csproj"/>
+        <ProjectReference Include="..\LannLogger\LannLogger.csproj"/>
+        <ProjectReference Include="..\ModulesApi\ModulesApi.csproj"/>
+        <ProjectReference Include="..\Networking\Networking.csproj"/>
+        <ProjectReference Include="..\SystemModule\SystemModule.csproj"/>
     </ItemGroup>
 
 </Project>

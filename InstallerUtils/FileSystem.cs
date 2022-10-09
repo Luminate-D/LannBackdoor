@@ -1,4 +1,4 @@
-﻿namespace Utilities; 
+﻿namespace InstallerUtils;
 
 public class FileSystem {
     public static void RecursiveDelete(string path) {
@@ -6,6 +6,8 @@ public class FileSystem {
         if (attributes.HasFlag(FileAttributes.Directory)) {
             DirectoryInfo info = new(path);
             info.Delete(true);
-        } else File.Delete(path);
+        } else {
+            File.Delete(path);
+        }
     }
 }
