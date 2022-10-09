@@ -8,7 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\LannConstants\LannConstants.csproj" />
         <ProjectReference Include="..\LannEvasion\LannEvasion.csproj" />
         <ProjectReference Include="..\LannLogger\LannLogger.csproj" />
         <ProjectReference Include="..\ModulesApi\ModulesApi.csproj" />
