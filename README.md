@@ -36,7 +36,7 @@ ModuleRegistry.LoadByAssembly(typeof(HERE_PUT_MODULE_CLASS).Assembly);
 - [ ] Installer
   - [ ] Escalation to Admin Rights
   - [x] Resolve & Create directory where to install
-  - [x] Resolve valid URL
+  - [x] Resolve valid URL & Verify with RSA
   - [x] Download client
   - [x] Install service
   - [x] Service
