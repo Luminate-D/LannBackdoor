@@ -33,6 +33,15 @@ ModuleRegistry.LoadByAssembly(typeof(HERE_PUT_MODULE_CLASS).Assembly);
 - [ ] Self Updating
 - [x] Anti VM / Fake Environment / Sandbox
 - [x] Anti Debug
+- [ ] Installer
+  - [ ] Escalation to Admin Rights
+  - [x] Resolve & Create directory where to install
+  - [x] Resolve valid URL
+  - [x] Download client
+  - [x] Install service
+  - [x] Service
+    - [x] Start Backdoor as LocalSystem
+    - [x] Keep Backdoor launched (restart if closed)
 - [ ] Modules
   - [x] System Module - Loaded by default
     - [x] Ping
