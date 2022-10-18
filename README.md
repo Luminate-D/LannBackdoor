@@ -89,5 +89,6 @@ ModuleRegistry.LoadByAssembly(typeof(HERE_PUT_MODULE_CLASS).Assembly);
     - [ ] Encrypt / Decrypt Files
   - [ ] Other
     - [ ] Install Driver
+    - [ ] EXIF Reader
     - [ ] Printer (der Drucker)
       - [ ] Print Local Image / From URL
