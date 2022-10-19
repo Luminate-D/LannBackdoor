@@ -2,23 +2,15 @@
 using LannLogger;
 using LannUtils;
 using Serilog.Core;
+using SystemModule.Structures;
 
 namespace ModulesApi;
 
 public static class ModuleRegistry {
     private static readonly Logger Logger = LoggerFactory.CreateLogger("ModuleRegistry");
-    private static readonly IdPool ModuleIdPool = new();
-    private static readonly Dictionary<int, ModuleInfo> Modules = new();
+    private static readonly Dictionary<string, ModuleInfo> Modules = new();
 
-    public static ModuleInfo? Get(int id) {
-        KeyValuePair<int, ModuleInfo?> kvPair = Modules.SingleOrDefault(
-            pair => pair.Key == id,
-            new KeyValuePair<int, ModuleInfo>())!;
-
-        return kvPair.Value;
-    }
-
-    public static Dictionary<int, ModuleInfo> GetModules() {
+    public static Dictionary<string, ModuleInfo> GetModules() {
         return Modules;
     }
 
@@ -26,9 +18,9 @@ public static class ModuleRegistry {
         return Modules.Values.SingleOrDefault(x => x!.Name == name, null);
     }
 
-    public static void Unload(int id) {
-        ModuleIdPool.Dispose(id);
-        Modules.Remove(id);
+    public static void Unload(string name) {
+        GetByName(name).Dispose();
+        Modules.Remove(name);
     }
 
     public static ModuleInfo[] Load(byte[] raw) {
@@ -43,30 +35,28 @@ public static class ModuleRegistry {
         List<ModuleInfo> loadedModules = new();
         foreach (Type type in modulesTypes) {
             string moduleName = type.GetCustomAttribute<Module>()!.Name;
-            int id = ModuleIdPool.NextId();
 
             if (GetByName(moduleName) != null) throw new Exception("Module is already loaded!");
 
-            IdPool handlerIdPool = new();
+            IModule instance = Activator.CreateInstance(type) as IModule;
+            instance.Name = moduleName;
+
             MethodInfo[] handlers = type.GetMethods()
                 .Where(x => x.GetCustomAttribute<Handler>() != null)
                 .ToArray();
 
             HandlerInfo[] handlersArray = handlers.Select(x => {
                 string handlerName = x.GetCustomAttribute<Handler>()!.Name;
-                int id = handlerIdPool.NextId();
-                return new HandlerInfo(id, handlerName, x);
+                return new HandlerInfo(instance, handlerName, x);
             }).ToArray();
 
-            ModuleInfo module = new(id, moduleName, handlersArray);
-            Modules.Add(id, module);
+            ModuleInfo module = new(instance, moduleName, handlersArray);
+            Modules.Add(moduleName, module);
             loadedModules.Add(module);
 
-            Logger.Information("Loaded module {Name} (ID: {Id}) | Handlers:",
-                module.Name, module.Id);
+            Logger.Information("Loaded module {Name} | Handlers:", module.Name);
             foreach (HandlerInfo handlerInfo in handlersArray)
-                Logger.Information("  - {Name} (ID: {Id})",
-                    handlerInfo.Name, handlerInfo.Id);
+                Logger.Information("  - {Name}", handlerInfo.Name);
         }
 
         return loadedModules.ToArray();

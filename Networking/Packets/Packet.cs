@@ -4,14 +4,14 @@ using Newtonsoft.Json.Linq;
 namespace Networking.Packets;
 
 public class Packet {
-    public readonly int ModuleId;
-    public readonly int HandlerId;
+    public readonly string ModuleName;
+    public readonly string HandlerName;
     private readonly JObject _data;
 
     public Packet(string data) {
         IPacket parsed = JsonConvert.DeserializeObject<IPacket>(data)!;
-        ModuleId = parsed.Module;
-        HandlerId = parsed.Handler;
+        ModuleName = parsed.Module;
+        HandlerName = parsed.Handler;
 
         _data = parsed.Data;
     }
@@ -26,7 +26,7 @@ public class Packet {
 }
 
 public class IPacket {
-    [JsonProperty("module")] public int Module { get; set; }
-    [JsonProperty("handler")] public int Handler { get; set; }
+    [JsonProperty("module")] public string Module { get; set; }
+    [JsonProperty("handler")] public string Handler { get; set; }
     [JsonProperty("data")] public JObject Data { get; set; }
 }

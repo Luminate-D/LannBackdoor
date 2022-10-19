@@ -30,11 +30,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBService", "LBService\LBSe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LannBackdoorInstaller", "LannBackdoorInstaller\LannBackdoorInstaller.csproj", "{6FC1D8CB-7665-4013-B089-4513ABD8CBC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LannConstants", "LannConstants\LannConstants.csproj", "{1B1623D5-5DAE-4053-9C9F-EF2FA5E8B1F1}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBIJson", "LBIJson\LBIJson.csproj", "{5183545B-177C-4CC2-B4D9-7F7810842CF8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunModule", "FunModule\FunModule.csproj", "{70538B67-4FAF-49BE-BF39-B3EF18018719}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LannConstants", "LannConstants\LannConstants.csproj", "{0041B3F4-4433-4CF9-93B5-78070EAF590A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -94,10 +94,6 @@ Global
 		{6FC1D8CB-7665-4013-B089-4513ABD8CBC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FC1D8CB-7665-4013-B089-4513ABD8CBC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FC1D8CB-7665-4013-B089-4513ABD8CBC0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1B1623D5-5DAE-4053-9C9F-EF2FA5E8B1F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1B1623D5-5DAE-4053-9C9F-EF2FA5E8B1F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1B1623D5-5DAE-4053-9C9F-EF2FA5E8B1F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1B1623D5-5DAE-4053-9C9F-EF2FA5E8B1F1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5183545B-177C-4CC2-B4D9-7F7810842CF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5183545B-177C-4CC2-B4D9-7F7810842CF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5183545B-177C-4CC2-B4D9-7F7810842CF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -106,6 +102,10 @@ Global
 		{70538B67-4FAF-49BE-BF39-B3EF18018719}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70538B67-4FAF-49BE-BF39-B3EF18018719}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70538B67-4FAF-49BE-BF39-B3EF18018719}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0041B3F4-4433-4CF9-93B5-78070EAF590A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0041B3F4-4433-4CF9-93B5-78070EAF590A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0041B3F4-4433-4CF9-93B5-78070EAF590A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0041B3F4-4433-4CF9-93B5-78070EAF590A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C3390A53-7342-4328-9286-7CDECB5A63DB} = {5D1C23E2-60D0-463F-9196-39F57C03B1DB}

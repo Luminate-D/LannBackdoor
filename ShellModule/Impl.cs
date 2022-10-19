@@ -7,18 +7,24 @@ using Networking.Structures;
 using Serilog.Core;
 using ShellModule.Structures;
 using ShellModule.Structures.Handlers;
+using SystemModule.Structures;
 
 namespace ShellModule;
 
 [Module("shell")]
-public class ShellModuleImpl {
+public class ShellModuleImpl : IModule {
     private static readonly Logger Logger = LoggerFactory.CreateLogger("Module", "Shell");
 
-    private static readonly IdPool _idPool = new();
-    private static readonly List<ShellInstance> _shellInstances = new();
+    private readonly IdPool _idPool;
+    private readonly List<ShellInstance> _shellInstances;
+
+    private ShellModuleImpl() {
+        _idPool = new IdPool();
+        _shellInstances = new List<ShellInstance>();
+    }
 
     [Handler("create")]
-    public static async Task CreateHandler(TCPClient client, CreateHandlerData data) {
+    public async Task CreateHandler(TCPClient client, CreateHandlerData data) {
         ShellInstance instance = new(_idPool.NextId(), data.FileName);
         CreateResult result = new();
 
@@ -29,25 +35,19 @@ public class ShellModuleImpl {
 
         instance.StdOut += async (_, args) => {
             Logger.Information("Shell [{ID}] StdOut: \"{Data}\"", args.Data);
-            await client.SendPacket(new ClientPacket {
-                Type = PacketType.Message,
-                Data = new OutputMessage {
-                    Id = instance.Id,
-                    Error = false,
-                    Data = args.Data
-                }
+            await Message(client, new OutputMessage {
+                Id = instance.Id,
+                Error = false,
+                Data = args.Data
             });
         };
 
         instance.StdErr += async (_, args) => {
             Logger.Information("Shell [{ID}] StdErr: \"{Data}\"", args.Data);
-            await client.SendPacket(new ClientPacket {
-                Type = PacketType.Message,
-                Data = new OutputMessage {
-                    Id = instance.Id,
-                    Error = true,
-                    Data = args.Data
-                }
+            await Message(client, new OutputMessage {
+                Id = instance.Id,
+                Error = true,
+                Data = args.Data
             });
         };
 
@@ -65,14 +65,11 @@ public class ShellModuleImpl {
             _idPool.Dispose(instance.Id);
         }
 
-        await client.SendPacket(new ClientPacket {
-            Type = PacketType.Callback,
-            Data = result
-        });
+        await Callback(client, "create", result);
     }
 
     [Handler("write")]
-    public static async Task WriteHandler(TCPClient client, WriteHandlerData data) {
+    public async Task WriteHandler(TCPClient client, WriteHandlerData data) {
         ShellInstance instance = _shellInstances.Find(instance => instance.Id == data.Id);
         WriteResult result = new();
 
@@ -82,11 +79,7 @@ public class ShellModuleImpl {
             result.Id = data.Id;
             result.Error = "Unknown shell";
 
-            await client.SendPacket(new ClientPacket {
-                Type = PacketType.Callback,
-                Data = result
-            });
-
+            Callback(client, "write", result);
             return;
         }
 
@@ -101,14 +94,11 @@ public class ShellModuleImpl {
             result.Id = data.Id;
         }
 
-        await client.SendPacket(new ClientPacket {
-            Type = PacketType.Callback,
-            Data = result
-        });
+        await Callback(client, "write", result);
     }
 
     [Handler("close")]
-    public static async Task CloseHandler(TCPClient client, CloseHandlerData data) {
+    public async Task CloseHandler(TCPClient client, CloseHandlerData data) {
         ShellInstance instance = _shellInstances.Find(instance => instance.Id == data.Id);
         CloseResult result = new();
 
@@ -118,10 +108,7 @@ public class ShellModuleImpl {
             result.Success = false;
             result.Error = "Unknown shell";
 
-            await client.SendPacket(new ClientPacket {
-                Type = PacketType.Callback,
-                Data = result
-            });
+            await Callback(client, "close", result);
             return;
         }
 
@@ -136,9 +123,6 @@ public class ShellModuleImpl {
             result.Error = error.Message;
         }
 
-        await client.SendPacket(new ClientPacket {
-            Type = PacketType.Callback,
-            Data = result
-        });
+        await Callback(client, "close", result);
     }
 }

@@ -59,7 +59,7 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\LannConstants\LannConstants.csproj">
-            <Project>{1b1623d5-5dae-4053-9c9f-ef2fa5e8b1f1}</Project>
+            <Project>{0041b3f4-4433-4cf9-93b5-78070eaf590a}</Project>
             <Name>LannConstants</Name>
         </ProjectReference>
     </ItemGroup>

@@ -6,15 +6,16 @@ using Networking;
 using Networking.Packets;
 using Networking.Structures;
 using Serilog.Core;
+using SystemModule.Structures;
 
 namespace FSModule;
 
 [Module("fs")]
-public class FSModuleImpl {
+public class FSModuleImpl : IModule {
     private static readonly Logger Logger = LoggerFactory.CreateLogger("Module", "FileSystem");
 
     [Handler("download")]
-    public static async Task DownloadHandler(TCPClient client, DownloadHandlerData data) {
+    public async Task DownloadHandler(TCPClient client, DownloadHandlerData data) {
         DownloadResult result = new();
         if (data.Raw != null) {
             byte[] raw = Convert.FromBase64String(data.Raw);
@@ -27,6 +28,9 @@ public class FSModuleImpl {
                     data.Path, error);
                 result.RawSuccess = false;
                 result.RawError = error.Message;
+
+                await Callback(client, "download", result);
+                return;
             }
         }
 
@@ -38,6 +42,9 @@ public class FSModuleImpl {
                 Logger.Error("Invalid URL Provided: {URL}", data.SourceURL);
                 result.SourceSuccess = false;
                 result.SourceError = "Invalid URL Provided";
+
+                await Callback(client, "download", result);
+                return;
             }
 
             try {
@@ -47,6 +54,7 @@ public class FSModuleImpl {
 
                 FileStream fileStream = File.Create(data.Path);
                 await stream.CopyToAsync(fileStream);
+
                 result.SourceSuccess = true;
             } catch (Exception e) {
                 result.SourceSuccess = false;
@@ -54,38 +62,36 @@ public class FSModuleImpl {
             }
         }
 
-        await client.SendPacket(new ClientPacket {
-            Type = PacketType.Callback,
-            Data = result
-        });
+        await Callback(client, "download", result);
     }
 
     [Handler("upload")]
-    public static async Task UploadHandler(TCPClient client, UploadHandlerData data) {
+    public async Task UploadHandler(TCPClient client, UploadHandlerData data) {
         UploadResult result = new();
 
         if (!File.Exists(data.Path)) {
             result.Success = false;
             result.Error = "File does not exist";
+
+            await Callback(client, "upload", result);
             return;
         }
 
         result.Success = true;
         result.Raw = Convert.ToBase64String(Utils.CreateZipFile(data.Path));
 
-        await client.SendPacket(new ClientPacket {
-            Type = PacketType.Callback,
-            Data = result
-        });
+        await Callback(client, "upload", result);
     }
 
     [Handler("readdir")]
-    public static async Task ReaddirHandler(TCPClient client, ReaddirHandlerData data) {
+    public async Task ReaddirHandler(TCPClient client, ReaddirHandlerData data) {
         ReaddirResult result = new();
 
         if (!File.Exists(data.Path)) {
             result.Success = false;
             result.Error = "File does not exist";
+
+            await Callback(client, "readdir", result);
             return;
         }
 
@@ -97,9 +103,6 @@ public class FSModuleImpl {
         result.Files = files;
         result.Directories = directories;
 
-        await client.SendPacket(new ClientPacket {
-            Type = PacketType.Callback,
-            Data = result
-        });
+        await Callback(client, "readdir", result);
     }
 }

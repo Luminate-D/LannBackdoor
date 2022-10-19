@@ -2,7 +2,7 @@
 
 namespace FSModule.Structures;
 
-public class ToggleMonitorResult {
+public class BlockInputResult {
     [JsonProperty("success")] public bool Success;
     [JsonProperty("error")] public string Error;
 }

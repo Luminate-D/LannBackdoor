@@ -14,8 +14,8 @@ public class TCPClient {
         public Packet Packet { get; init; } = null!;
     }
 
-    public bool IsVerified;
     public int Id;
+    public bool IsVerified => Id != -1;
 
     public event EventHandler OnClose = delegate { };
     public event EventHandler OnConnect = delegate { };
@@ -33,7 +33,6 @@ public class TCPClient {
     public TCPClient(string url, int port) {
         _url = url;
         _port = port;
-        IsVerified = false;
         Id = -1;
 
         _isHandlingPackets = false;

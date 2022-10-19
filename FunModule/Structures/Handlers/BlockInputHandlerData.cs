@@ -2,6 +2,6 @@
 
 namespace FunModule.Structures.Handlers;
 
-public class ToggleMonitorHandlerData {
+public class BlockInputHandlerData {
     [JsonProperty("enable")] public bool Enable;
 }

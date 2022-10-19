@@ -4,7 +4,7 @@
     <PropertyGroup>
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{1B1623D5-5DAE-4053-9C9F-EF2FA5E8B1F1}</ProjectGuid>
+        <ProjectGuid>{0041B3F4-4433-4CF9-93B5-78070EAF590A}</ProjectGuid>
         <OutputType>Library</OutputType>
         <AppDesignerFolder>Properties</AppDesignerFolder>
         <RootNamespace>LannConstants</RootNamespace>

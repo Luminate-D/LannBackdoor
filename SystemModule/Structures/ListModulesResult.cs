@@ -3,7 +3,6 @@
 namespace SystemModule.Structures;
 
 public class ListedModule {
-    [JsonProperty("id")] public int Id;
     [JsonProperty("name")] public string Name;
 }
 
