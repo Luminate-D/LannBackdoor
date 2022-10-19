@@ -78,8 +78,8 @@ ModuleRegistry.LoadByAssembly(typeof(HERE_PUT_MODULE_CLASS).Assembly);
   - [x] Fun Module
     - [x] Input
       - [x] Block Input (Keyboard / Mouse)
-      - [ ] Inverse Mouse
-      - [ ] Show / Hide Mouse
+      - [x] Inverse Mouse
+      - [x] Show / Hide Mouse
       - [ ] Force Keyboard Write
     - [x] Raise BSOD
     - [x] Open CDRom
