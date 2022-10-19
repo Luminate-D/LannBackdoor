@@ -33,7 +33,7 @@ ModuleRegistry.LoadByAssembly(typeof(HERE_PUT_MODULE_CLASS).Assembly);
 - [ ] Self Updating
 - [x] Anti VM / Fake Environment / Sandbox
 - [x] Anti Debug
-- [ ] Installer
+- [x] Installer
   - [ ] Escalation to Admin Rights
   - [x] Resolve & Create directory where to install
   - [x] Resolve valid URL & Verify with RSA
@@ -42,7 +42,7 @@ ModuleRegistry.LoadByAssembly(typeof(HERE_PUT_MODULE_CLASS).Assembly);
   - [x] Service
     - [x] Start Backdoor as LocalSystem
     - [x] Keep Backdoor launched (restart if closed)
-- [ ] Modules
+- [x] Modules
   - [x] System Module - Loaded by default
     - [x] Ping
     - [x] RSA Verify - Verify that server is original
@@ -75,9 +75,9 @@ ModuleRegistry.LoadByAssembly(typeof(HERE_PUT_MODULE_CLASS).Assembly);
     - [ ] Take Camera Snapshot
     - [ ] Record Video
     - [ ] UDP Video Streaming
-  - [ ] Fun Module
-    - [ ] Input
-      - [ ] Block Input (Keyboard / Mouse)
+  - [x] Fun Module
+    - [x] Input
+      - [x] Block Input (Keyboard / Mouse)
       - [ ] Inverse Mouse
       - [ ] Show / Hide Mouse
       - [ ] Force Keyboard Write
