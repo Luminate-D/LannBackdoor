@@ -1,4 +1,5 @@
-﻿using LannConstants;
+﻿using Destructurama;
+using LannConstants;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 
@@ -8,6 +9,7 @@ public static class LoggerFactory {
     public static Serilog.Core.Logger CreateLogger(params string[] which) {
         string logWhich = string.Join(' ', which.Select(x => $"[{x}]"));
         LoggerConfiguration cfg = new LoggerConfiguration()
+            .Destructure.JsonNetTypes()
             .WriteTo.Console(
                 outputTemplate: "[{Timestamp:HH:mm:ss}] [{Level}] " + logWhich +
                                 " {Message:lj}{NewLine}{Exception}",
