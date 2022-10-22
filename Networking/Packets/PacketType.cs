@@ -1,6 +1,7 @@
 ﻿namespace Networking.Packets;
 
 public enum PacketType {
+    Ping,
     Pong,
     Ready,
     Verified,

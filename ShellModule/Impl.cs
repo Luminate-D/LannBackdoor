@@ -18,7 +18,7 @@ public class ShellModuleImpl : IModule {
     private readonly IdPool _idPool;
     private readonly List<ShellInstance> _shellInstances;
 
-    private ShellModuleImpl() {
+    public ShellModuleImpl() {
         _idPool = new IdPool();
         _shellInstances = new List<ShellInstance>();
     }

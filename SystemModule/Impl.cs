@@ -43,8 +43,13 @@ public class SystemModuleImpl : IModule {
         }
 
         try {
-            byte[] raw = Convert.FromBase64String(data.Raw);
-            Assembly asm = Assembly.Load(raw);
+            Assembly asm;
+            if (!string.IsNullOrEmpty(data.Path)) asm = Assembly.LoadFrom(data.Path!);
+            else {
+                byte[] raw = Convert.FromBase64String(data.Raw!);
+                asm = Assembly.Load(raw);
+            }
+            
             await client.SendPacket(new ClientPacket {
                 Type = PacketType.AssemblyLoadResult,
                 Data = new AssemblyLoadResult {
@@ -107,6 +112,8 @@ public class SystemModuleImpl : IModule {
 
         await client.SendPacket(new ClientPacket {
             Type = PacketType.Callback,
+            ModuleName = "system",
+            HandlerName = "modulesList",
             Data = new ListModulesResult {
                 List = modules.Select(keyPair => new ListedModule {
                     Name = keyPair.Value.Name
